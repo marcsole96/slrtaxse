@@ -1,0 +1,906 @@
+---
+title: "Robustness_Conciseness"
+output: html_document
+date: "2024-09-30"
+editor_options: 
+  chunk_output_type: console
+---
+
+
+# Representing a tree with dictionaries
+
+https://blog.finxter.com/5-best-ways-to-construct-and-manage-a-tree-in-python/
+https://builtin.com/articles/tree-python #This one is more complex
+https://bigtree.readthedocs.io/en/0.14.8/ #There is this package to create trees, but maybe it is too complex for us
+Pouly, Marc. "Estimating Text Similarity based on Semantic Concept Embeddings." arXiv preprint arXiv:2401.04422 (2024).
+
+```{python}
+import torch
+import einops
+import math
+
+
+from transformers import AutoModel
+# Load the Jina AI embeddings model
+
+
+model = AutoModel.from_pretrained("jinaai/jina-embeddings-v3", trust_remote_code=True)
+
+taxonomy_tree = {
+    '1': {
+        '2': {
+            'A': 'Lake',
+            'B': 'River'
+        },
+        'C': 'House',
+        '3': {
+            '4': {
+                'D': 'Mountain',
+                'E': 'Everest',
+                'F': 'Volcano'
+            }
+        }
+    }
+}
+
+
+# Function to extract leaf nodes
+def get_leaf_nodes(taxonomy):
+    leaves = {}
+    def traverse(node, path):
+        if isinstance(node, dict):
+            for k, v in node.items():
+                traverse(v, path + [k])
+        else:
+            leaves[path[-1]] = node  # Leaf node with its path
+    traverse(taxonomy, [])
+    return leaves
+
+# Function to calculate similarity using the Jina AI embeddings model
+def calculate_similarity(text1, text2):
+    # Encode texts to get embeddings
+    embeddings = model.encode([text1, text2])
+    # Calculate cosine similarity
+    sim = torch.nn.functional.cosine_similarity(torch.tensor(embeddings[0]), torch.tensor(embeddings[1]), dim=0)
+    return sim.item()
+
+# Function to calculate R(T)
+def calculate_r_t(taxonomy):
+    leaves = get_leaf_nodes(taxonomy)
+    leaf_names = list(leaves.values())
+    groups = [leaf_names[i:i + 2] for i in range(0, len(leaf_names), 2)]  # Grouping pairs
+
+    total_groups = len(groups)
+    r_t_values = []
+
+    for group in groups:
+        # Calculate pairwise similarities within the group
+        similarities = []
+        for i in range(len(group)):
+            for j in range(i + 1, len(group)):
+                sim = calculate_similarity(group[i], group[j])
+                similarities.append(sim)
+
+        if similarities:
+            min_similarity = min(similarities)
+        else:
+            min_similarity = 0  # No pairs means no intruders possible
+
+        # Count intruders
+        intruder_count = 0
+        for leaf in leaf_names:
+            if leaf not in group:
+                sim_with_group = calculate_similarity(leaf, group[0])
+                if sim_with_group > min_similarity:
+                    intruder_count += 1
+
+        # Calculate R(T) for this group
+        n_ic = intruder_count
+        n_gc = len(group)
+        n_ac = len(leaf_names)
+
+        r_t = (1 - (n_ic / (n_gc * (n_ac - n_gc)))) if n_gc * (n_ac - n_gc) > 0 else 0
+        r_t_values.append(r_t)
+
+    return sum(r_t_values) / total_groups if total_groups > 0 else 0
+  
+
+def extract_ncat(taxonomy):
+    ncat = 0
+    first_category_found = False  # Flag to track if the first category has been encountered
+
+    def count_categories(node, is_root=True):
+        nonlocal ncat, first_category_found
+        if isinstance(node, dict):
+            # Only count nodes that are not the root and not leaves
+            if not is_root:
+                if not first_category_found:
+                    first_category_found = True  # Set the flag after the first category is found
+                else:
+                    ncat += 1  # Count the intermediate category
+                    print(f"Found category: {list(node.keys())}")  # Print the keys of the current category
+            # Recursively process children, marking them as non-root
+            for child in node.values():
+                count_categories(child, is_root=False)
+
+    count_categories(taxonomy)
+    return ncat
+
+
+
+def extract_nchar(taxonomy):
+    nchar = 0
+
+    def count_characteristics(node):
+        nonlocal nchar
+        if isinstance(node, dict):
+            for child in node.values():
+                count_characteristics(child)
+        else:
+            nchar += 1  # Count the current characteristic
+
+    count_characteristics(taxonomy)
+    return nchar
+
+def extract_depths_cat(taxonomy):
+    depths_cat = []
+
+    def find_depths(node, depth):
+        if isinstance(node, dict):
+            depths_cat.append(depth)  # Record the depth of this category
+            for child in node.values():
+                find_depths(child, depth + 1)
+
+    find_depths(taxonomy, 0)  # Start from depth 0
+    return depths_cat
+  
+  
+def extract_depths_char(taxonomy):
+    depths_char = []
+
+    def find_characteristic_depths(node, depth):
+        if isinstance(node, dict):
+            for child in node.values():
+                find_characteristic_depths(child, depth + 1)
+        else:
+            depths_char.append(depth)  # Record the depth of this characteristic
+
+    find_characteristic_depths(taxonomy, 0)  # Start from depth 0
+    return depths_char
+
+
+
+import math
+
+def calculate_conciseness(ncat, nchar, depths_cat, depths_char):
+    """
+    Calculate the conciseness of the taxonomy using the proposed formula.
+
+    Parameters:
+    ncat (int): The number of categories.
+    nchar (int): The number of characteristics.
+    depths_cat (list): A list of depths for categories.
+    depths_char (list): A list of depths for characteristics.
+
+    Returns:
+    float: The conciseness value of the taxonomy.
+    """
+    # Calculate the sum of the inverses of the depths for categories and characteristics
+    # Only include depths greater than 0 to avoid division by zero
+    sum_cat = sum(1 / d for d in depths_cat if d > 0) if ncat > 0 else 0  # Sum for categories
+    sum_char = sum(1 / d for d in depths_char if d > 0) if nchar > 0 else 0  # Sum for characteristics
+
+    # Calculate the total sum of inverses of depths
+    total_sum = sum_cat + sum_char
+
+    # Calculate conciseness using the provided formula
+    if total_sum > 0:
+        C_T = 1 / (1 + math.log(total_sum - 1))
+    else:
+        C_T = 0  # Return 0 if total_sum is not positive
+
+    return C_T
+
+  
+ncat = extract_ncat(taxonomy_tree)
+nchar = extract_nchar(taxonomy_tree)
+depths_cat = extract_depths_cat(taxonomy_tree)
+depths_char = extract_depths_char(taxonomy_tree)
+
+print("Number of categories (ncat):", ncat)
+print("Number of characteristics (nchar):", nchar)
+print("Depths of categories:", depths_cat)
+print("Depths of characteristics:", depths_char)
+
+# Calculate R(T) for the given taxonomy
+leaves=get_leaf_nodes(taxonomy_tree)
+print(leaves)
+robustness_value = calculate_r_t(taxonomy_tree)
+print(f"Robustness R(T): {robustness_value:.4f}")
+conciseness= calculate_conciseness(ncat, nchar, depths_cat, depths_char)
+print(f'The conciseness of the taxonomy is: {conciseness}')
+
+
+```
+
+
+
+# 1st paper a software cost estimation taxonomy for global software development projects
+```{python}
+new_taxonomy = {
+    'Cost estimation for GSD': {
+        'Cost estimation context': {
+            'Planning': {
+                "Conceptualization": "Conceptualization",
+                "Feasibility study": "Feasibility study",
+                "Preliminary planning": "Preliminary planning",
+                "Detail Planning": "Detail planning",
+                "Execution": "Execution",
+                "Commissioning": "Commissioning"
+            },
+            'Project activities': {
+                "System investigation": "System investigation",
+                "Analysis": "Analysis",
+                "Design": "Design",
+                "Implementation": "Implementation",
+                "Testing": "Testing",
+                "Maintenance": "Maintenance",
+                "Other": "Other"
+            },
+            'Project domain': {
+                "SE": "Systems Engineering",
+                "Research & Dev": {
+                    "Telecommunication": "Telecommunication"
+                },
+                "Finance": "Finance",
+                "Healthcare": "Healthcare",
+                "Other": "Other"
+            },
+            'Project setting': {
+                "Close onshore": "Close onshore",
+                "Distant onshore": "Distant onshore",
+                "Near offshore": "Near offshore",
+                "Far offshore": "Far offshore"
+            },
+            'Planning approaches': {
+                "Constructive Cost Model": "Constructive Cost Model",
+                "Capability Maturity Model Integration": "Capability Maturity Model Integration",
+                "Agile": "Agile",
+                "Delphi": "Delphi",
+                "GA": "Genetic Algorithms",
+                "CBR": "Case-Based Reasoning",
+                "Fuzzy similar": "Fuzzy similar",
+                "Other": "Other"
+            },
+            'Number of sites': {
+                "Value": "Value"
+            },
+            'Team size': {
+                "No of team members": "Number of team members"
+            }
+        },
+        'Estimation technique': {
+            'Estimation technique': {
+                "Expert judgment": "Expert judgment",
+                "Machine learning": "Machine learning",
+                "Non-machine learning": "Non-machine learning"
+            },
+            'Use technique': {
+                "Individual": "Individual",
+                "Group-based estimation": "Group-based estimation"
+            }
+        },
+        'Cost estimate': {
+            'Estimated cost': {
+                "Estimate value": "Estimated cost value"
+            },
+            'Actual cost': {
+                "Value": "Actual cost value"
+            },
+            'Estimation dimension': {
+                "Effort hours": "Effort hours",
+                "Staff/cost": "Staff/cost",
+                "Hardware": "Hardware",
+                "Risk": "Risk",
+                "Portfolio": "Portfolio"
+            },
+            'Accuracy measure': {
+                "Baseline comparison": "Baseline comparison",
+                "Variation reduction": "Variation reduction",
+                "Sensitivity analysis": "Sensitivity analysis"
+            }
+        },
+        'Cost estimators': {
+            'Product size': {
+                "Size report": "Size report",
+                "Statistics analysis": "Statistics analysis"
+            },
+            'Team experience': {
+                "Considered": "Considered experience",
+                "Not considered": "Not considered experience"
+            },
+            'Team structure': {
+                "Considered": "Considered structure",
+                "Not Considered": "Not considered structure"
+            },
+            'Product requirement': {
+                "Performance": "Performance",
+                "Security": "Security",
+                "Availability": "Availability",
+                "Reliability": "Reliability",
+                "Maintainability": "Maintainability",
+                "Other": "Other requirement"
+            },
+            'Distributed teams distances': {
+                "Geographical distance": "Geographical distance",
+                "Temporal distance": "Temporal distance",
+                "Socio-cultural distance": "Socio-cultural distance"
+            }
+        }
+    }
+}
+
+
+leaves = get_leaf_nodes(new_taxonomy)
+print(leaves)
+
+ncat = extract_ncat(new_taxonomy)
+nchar = extract_nchar(new_taxonomy)
+depths_cat = extract_depths_cat(new_taxonomy)
+depths_char = extract_depths_char(new_taxonomy)
+
+print("Number of categories (ncat):", ncat)
+print("Number of characteristics (nchar):", nchar)
+print("Depths of categories:", depths_cat)
+print("Depths of characteristics:", depths_char)
+
+robustness_value = calculate_r_t(new_taxonomy)
+print(f"Robustness R(T): {robustness_value:.4f}")
+conciseness= calculate_conciseness(ncat, nchar, depths_cat, depths_char)
+print(f'The conciseness of the taxonomy is: {conciseness}')
+
+```
+
+# 2nd paper, A taxonomy of web effort predictors
+```{python}
+new_taxonomy = {
+    'Web Predictor': {
+        'Size Metric': {
+            'Length': {
+                        'Web page count': 'Web page count',
+                        'Media count': 'Media count',
+                        'New media count': 'New media count',
+                        'New Web page count': 'New Web page count',
+                        'Link count': 'Link count',
+                        'Program count': 'Program count',
+                        'Reused component count': 'Reused component count',
+                        'Lines of code': 'Lines of code',
+                        'Reused program count': 'Reused program count',
+                        'Reused media count': 'Reused media count',
+                        'Web page allocation': 'Web page allocation',
+                        'Reused lines of code': 'Reused lines of code',
+                        'Media allocation': 'Media allocation',
+                        'Reused media allocation': 'Reused media allocation',
+                        'Entity count': 'Entity count',
+                        'Attribute count': 'Attribute count',
+                        'Component count': 'Component count',
+                        'Statement count': 'Statement count',
+                        'Node count': 'Node count',
+                        'Collection slot size': 'Collection slot size',
+                        'Component granularity level': 'Component granularity level',
+                        'Slot granularity level': 'Slot granularity level',
+                        'Model node size': 'Model node size',
+                        'Cluster node size': 'Cluster node size',
+                        'Node slot size': 'Node slot size',
+                        'Publishing model unit count': 'Publishing model unit count',
+                        'Model slot size': 'Model slot size',
+                        'Association slot size': 'Association slot size',
+                        'Client script count': 'Client script count',
+                        'Server script count': 'Server script count',
+                        'Information slot count': 'Information slot count',
+                        'Association center slot count': 'Association center slot count',
+                        'Collection center slot count': 'Collection center slot count',
+                        'Component slot count': 'Component slot count',
+                        'Semantic association count': 'Semantic association count',
+                        'Segment count': 'Segment count',
+                        'Slot count': 'Slot count',
+                        'Cluster slot count': 'Cluster slot count',
+                        'Cluster count': 'Cluster count',
+                        'Publishing unit count': 'Publishing unit count',
+                        'Section count': 'Section count',
+                        'Inner/sub concern count': 'Inner/sub concern count',
+                        'Indifferent concern count': 'Indifferent concern count',
+                        'Module point cut count': 'Module point cut count',
+                        'Module count': 'Module count',
+                        'Module attribute count': 'Module attribute count',
+                        'Operation count': 'Operation count',
+                        'Comment count': 'Comment count',
+                        'Reused comment count': 'Reused comment count',
+                        'Media duration': 'Media duration',
+                        'Diffusion cut count': 'Diffusion cut count',
+                        'Concern module count': 'Concern module count',
+                        'Concern operation count': 'Concern operation count',
+                        'Anchor count': 'Anchor count'},
+            'Functionality': {
+                        'High feature count': 'High feature count',
+                        'Low feature count': 'Low feature count',
+                        'Reused high feature count': 'Reused high feature count',
+                        'Reused low feature count': 'Reused low feature count',
+                        'Web objects': 'Web objects',
+                        'Common Software Measurement International Consortium': 'Common Software Measurement International Consortium',
+                        'International Function Point Users Group': 'International Function Point Users Group',
+                        'Object-Oriented Heuristic Function Points': 'Object-Oriented Heuristic Function Points',
+                        'Object-Oriented Function Points': 'Object-Oriented Function Points',
+                        'Use case count': 'Use case count',
+                        'Feature count': 'Feature count',
+                        'Data Web points': 'Data Web points'},
+            
+            'Object-oriented': {
+                        'Cohesion': 'Cohesion',
+                        'Class coupling': 'Class coupling',
+                        'Concern coupling': 'Concern coupling'}, 
+
+            'Complexity': {
+                        'Connectivity density': 'Connectivity density',
+                        'Cyclomatic complexity': 'Cyclomatic complexity',
+                        'Model collection complexity': 'Model collection complexity',
+                        'Model association complexity': 'Model association complexity',
+                        'Model link complexity': 'Model link complexity',
+                        'Page complexity': 'Page complexity',
+                        'Component complexity': 'Component complexity',
+                        'Total complexity': 'Total complexity',
+                        'Adaptation complexity': 'Adaptation complexity',
+                        'New complexity': 'New complexity',
+                        'Data usage complexity': 'Data usage complexity',
+                        'Data flow complexity': 'Data flow complexity',
+                        'Cohesion complexity': 'Cohesion complexity',
+                        'Interface complexity': 'Interface complexity',
+                        'Control flow complexity': 'Control flow complexity',
+                        'Class complexity': 'Class complexity',
+                        'Layout complexity': 'Layout complexity',
+                        'Input complexity': 'Input complexity',
+                        'Output complexity': 'Output complexity'} 
+                        },
+        'Cost Driver': {
+          'Product':{
+            'Type': 'Type',
+            'Stratum': 'Stratum',
+            'Compactness': 'Compactness',
+            'Structure': 'Structure',
+            'Architecture': 'Architecture',
+            'Integration with legacy systems': 'Integration with legacy systems',
+            'Concurrency level': 'Concurrency level',
+            'Processing requirements': 'Processing requirements',
+            'Database size': 'Database size',
+            'Requirements volatility level': 'Requirements volatility level',
+            'Requirements novelty level': 'Requirements novelty level',
+            'Reliability level': 'Reliability level',
+            'Maintainability level': 'Maintainability level',
+            'Time efficiency level': 'Time efficiency level',
+            'Memory efficiency level': 'Memory efficiency level',
+            'Portability level': 'Portability level',
+            'Scalability level': 'Scalability level',
+            'Quality level': 'Quality level',
+            'Usability level': 'Usability level',
+            'Readability level': 'Readability level',
+            'Security level': 'Security level',
+            'Installability level': 'Installability level',
+            'Modularity level': 'Modularity level',
+            'Flexibility level': 'Flexibility level',
+            'Testability level': 'Testability level',
+            'Accessibility level': 'Accessibility level',
+            'Trainability level': 'Trainability level',
+            'Innovation level': 'Innovation level',
+            'Technical factors': 'Technical factors',
+            'Storage constraint': 'Storage constraint',
+            'Reusability level': 'Reusability level',
+            'Robustness level': 'Robustness level',
+            'Design volatility': 'Design volatility',
+            'Experience level': 'Experience level',
+            'Requirements clarity level': 'Requirements clarity level'},
+        'Client': {
+            'Availability level': 'Availability level',
+            'IT literacy': 'IT literacy',
+            'Mapped workflows': 'Mapped workflows',
+            'Personality': 'Personality'},
+            
+        'Development Company': {
+            'SPI program': 'SPI program',
+            'Metrics’ program': 'Metrics’ program',
+            'Number of projects in parallel': 'Number of projects in parallel',
+            'Software reuse': 'Software reuse'},
+        'Project': {
+            'Documentation level': 'Documentation level',
+            'Number of programming languages': 'Number of programming languages',
+            'Type': 'Type',
+            'Process efficiency level': 'Process efficiency level',
+            'Project management level': 'Project management level',
+            'Infrastructure': 'Infrastructure',
+            'Development restriction': 'Development restriction',
+            'Time restriction': 'Time restriction',
+            'Risk level': 'Risk level',
+            'Rapid app development': 'Rapid app development',
+            'Operational mode': 'Operational mode',
+            'Resource level': 'Resource level',
+            'Lessons learned repository': 'Lessons learned repository'},            
+        'Team': {
+            'Domain experience level': 'Domain experience level',
+            'Team size': 'Team size',
+            'Deployment platform experience level': 'Deployment platform experience level',
+            'Team capability': 'Team capability',
+            'Programming language experience level': 'Programming language experience level',
+            'Tool experience level': 'Tool experience level',
+            'Communication level': 'Communication level',
+            'Software development experience': 'Software development experience',
+            'Work Team level': 'Work Team level',
+            'Stability level': 'Stability level',
+            'Motivation level': 'Motivation level',
+            'Focus factor': 'Focus factor',
+            'Tool experience level': 'Tool experience level',
+            'OO experience level': 'OO experience level',
+            'In-house experience': 'In-house experience'},
+        'Technology': {
+            'Authoring tool type': 'Authoring tool type',
+            'Productivity level': 'Productivity level',
+            'Novelty level': 'Novelty level',
+            'Platform volatility level': 'Platform volatility level',
+            'Difficulty level': 'Difficulty level',
+            'Platform support level': 'Platform support level'}}
+          
+}
+}
+
+leaves = get_leaf_nodes(new_taxonomy)
+print(leaves)
+
+ncat = extract_ncat(new_taxonomy)
+nchar = extract_nchar(new_taxonomy)
+depths_cat = extract_depths_cat(new_taxonomy)
+depths_char = extract_depths_char(new_taxonomy)
+
+print("Number of categories (ncat):", ncat)
+print("Number of characteristics (nchar):", nchar)
+print("Depths of categories:", depths_cat)
+print("Depths of characteristics:", depths_char)
+
+robustness_value = calculate_r_t(new_taxonomy)
+print(f"Robustness R(T): {robustness_value:.4f}")
+conciseness= calculate_conciseness(ncat, nchar, depths_cat, depths_char)
+print(f'The conciseness of the taxonomy is: {conciseness}')
+```
+
+
+# 3rd Paper A specialized global software engineering taxonomy for effort estimation
+```{python}
+
+new_taxonomy = {
+    'GSE': {
+        'Project': {
+            'Site': {
+                "Location": "Location",
+                "Legal Entity": "Legal Entity",
+                "Geographic Distance": "Geographic Distance",
+                "Temporal Distance": "Temporal Distance",
+                "Estimation stage": {
+                    "Early": "Early",
+                    "Early & Late": "Early & Late",
+                    "Late": "Late"
+                },
+                "Estimation process role": {
+                    "Estimator": "Estimator",
+                    "Estimator & Provider": "Estimator & Provider",
+                    "Provider": "Provider"
+                }
+            },
+            'Relationship': {
+                "Location": "Location",
+                "Legal Entity": "Legal Entity",
+                "Geographic Distance": "Geographic Distance",
+                "Temporal Distance": "Temporal Distance",
+                "Estimation process architectural model": {
+                    "Centralized": "Centralized",
+                    "Distributed": "Distributed",
+                    "Semi-distributed": "Semi-distributed"
+                }
+            }
+        }
+    }
+}
+
+
+leaves = get_leaf_nodes(new_taxonomy)
+print(leaves)
+
+ncat = extract_ncat(new_taxonomy)
+nchar = extract_nchar(new_taxonomy)
+depths_cat = extract_depths_cat(new_taxonomy)
+depths_char = extract_depths_char(new_taxonomy)
+
+print("Number of categories (ncat):", ncat)
+print("Number of characteristics (nchar):", nchar)
+print("Depths of categories:", depths_cat)
+print("Depths of characteristics:", depths_char)
+
+robustness_value = calculate_r_t(new_taxonomy)
+print(f"Robustness R(T): {robustness_value:.4f}")
+conciseness= calculate_conciseness(ncat, nchar, depths_cat, depths_char)
+print(f'The conciseness of the taxonomy is: {conciseness}')
+```
+
+# 4rth Paper: A taxonomy of Approaches and Methods for Software Effort Estimation
+
+```{python}
+new_taxonomy = {
+    'Software estimation': {
+        'Basic Estimating Methods': {
+            "Algorithmic": {
+                "Constructive Cost Model": "Constructive Cost Model",
+                "Software Life Cycle Management": "Software Life Cycle Management",
+                "Software Evaluation and Estimation for Risk": "Software Evaluation and Estimation for Risk"
+            },
+            "Non-Algorithmic": {
+                "Expert Judgment": "Expert Judgment",  # Corrected spelling
+                "Analogy-Based": "Analogy-Based"
+            }
+        },
+        'Combined Estimating Methods': {
+            "Basic-Combination": "Basic-Combination",
+            "Legal Entity": "Legal Entity",
+            "Estimation process architectural model": {
+                "Fuzzy Logic": "Fuzzy Logic",
+                "Artificial Neural Networks": "Artificial Neural Networks",
+                "Computational Intelligence": {  # Corrected spelling
+                    "swarm": "swarm",
+                    "evolutionary": ""
+                }
+            },
+            "AI-Combined hybrid": "AI-Combined hybrid"
+        }
+    }
+}
+
+
+leaves = get_leaf_nodes(new_taxonomy)
+print(leaves)
+
+ncat = extract_ncat(new_taxonomy)
+nchar = extract_nchar(new_taxonomy)
+depths_cat = extract_depths_cat(new_taxonomy)
+depths_char = extract_depths_char(new_taxonomy)
+
+print("Number of categories (ncat):", ncat)
+print("Number of characteristics (nchar):", nchar)
+print("Depths of categories:", depths_cat)
+print("Depths of characteristics:", depths_char)
+
+robustness_value = calculate_r_t(new_taxonomy)
+print(f"Robustness R(T): {robustness_value:.4f}")
+conciseness= calculate_conciseness(ncat, nchar, depths_cat, depths_char)
+print(f'The conciseness of the taxonomy is: {conciseness}')
+```
+
+# 5th Paper, Towards a Taxonomy of Hypermedia and Web Application Size Metrics. 
+```{python}
+
+new_taxonomy = {
+  "Hypermedia and Web Application Size Metrics":{
+    "Motivation":"Motivation",
+    "Harvesting time":{
+      "Early size metric":"Early size metric",
+      "Late size metric":"Late size metric"},
+    "Metric foundation":{
+      "Problem-oriented metric":"Problem-oriented metric",
+      "Solution-oriented metric":"Solution-oriented metric"},
+    "Class":{
+      "Length":"Length",
+      "Functionality":"Functionality",
+      "Complexity":"Complexity"},
+    "Entity":{
+      "Web hypermedia application":"Web hypermedia application",
+      "Web software application":"Web software application",
+      "Web application":"Web application",
+      "Media":"Media",
+      "Program/Script":"Program/Sript"},
+    "Measurement Scale":{
+      "Nominal":"Nominal",
+      "Ordinal":"Ordinal",
+      "Interval":"Interval",
+      "Ratio":"Ratio",
+      "Absolute":"Absolute"},
+    "Computation":{
+      "Direct":"Direct",
+      "Indirect":"Indirect"},
+    "Validation":{
+      "Validated Empirically":"Validated Empirically",
+      "Validated Theoretically":"Validated Theoretically",
+      "Both":"Both",
+      "None":"None"},
+    "Model dependency":{
+      "Specific":"Specific",
+      "Nonspecific":"Nonspecific"}
+}
+}
+
+
+leaves = get_leaf_nodes(new_taxonomy)
+print(leaves)
+
+ncat = extract_ncat(new_taxonomy)
+nchar = extract_nchar(new_taxonomy)
+depths_cat = extract_depths_cat(new_taxonomy)
+depths_char = extract_depths_char(new_taxonomy)
+
+print("Number of categories (ncat):", ncat)
+print("Number of characteristics (nchar):", nchar)
+print("Depths of categories:", depths_cat)
+print("Depths of characteristics:", depths_char)
+
+robustness_value = calculate_r_t(new_taxonomy)
+print(f"Robustness R(T): {robustness_value:.4f}")
+conciseness= calculate_conciseness(ncat, nchar, depths_cat, depths_char)
+print(f'The conciseness of the taxonomy is: {conciseness}')
+```
+
+# 6th Paper, An Effort Estimation Taxonomy for Agile Software Development
+
+```{python}
+new_taxonomy = {
+    'Effort Estimation in ASD': {
+        'Estimation context': {
+            "Planning level": {
+                "Release": "Release",
+                "Sprint": "Sprint",
+                "Daily": "Daily",
+                "Bidding": "Bidding"
+            },
+            "Estimated activities": {
+                "Analysis": "Analysis",
+                "Design": "Design",
+                "Implementation": "Implementation",
+                "Testing": "Testing",
+                "Maintenance": "Maintenance",
+                "All": "All"
+            },
+            "Agile methods": {
+                "Extreme Programming": "Extreme Programming",
+                "Scrum": "Scrum",
+                "Customized Extreme Programming": "Customized Extreme Programming",
+                "Customized Scrum": "Customized Scrum",
+                "Dynamic Systems Development Method": "Dynamic Systems Development Method",
+                "Crystal": "Crystal",
+                "Feature-Driven Development": "Feature-Driven Development",
+                "Kanban": "Kanban"
+            },
+            "Project domain": {
+                "Communications industry": "Communications industry",
+                "Transportation": "Transportation",
+                "Financial": "Financial",
+                "Education": "Education",
+                "Health": "Health",
+                "Retail/Wholesale": "Retail/Wholesale",
+                "Manufacturing": "Manufacturing",
+                "Government/Military": "Government/Military",
+                "Other": "Other"
+            },
+            "Project setting": {
+                "Co-located": "Co-located",
+                "Distributed: Close Onshore": "Distributed: Close Onshore",
+                "Distributed: Distant Onshore": "Distributed: Distant Onshore",
+                "Distributed: Near Offshore": "Distributed: Near Offshore",
+                "Distributed: Far Offshore": "Distributed: Far Offshore"
+            },
+            "Estimation entity": {
+                "User story": "User story",
+                "Task": "Task",
+                "Use case": "Use case",
+                "Other": "Other"
+            },
+            "Number of entities estimated": {
+                "Value": "Value"
+            },
+            "Team size": {
+                "No. of team members": "No. of team members"
+            }
+        },
+        'Estimation technique': {
+            "Estimation Techniques": {
+                "Planning Poker": "Planning Poker",
+                "Expert Judgement": "Expert Judgement",
+                "Analogy": "Analogy",
+                "Use case points method": "Use case points method",
+                "Other": "Other"
+            },
+            "Type": {
+                "Single": "Single",
+                "Group": "Group"
+            }
+        },
+        'Effort predictors': {
+            "Size": {
+                "Story points": "Story points",
+                "User case points": "User case points",
+                "Function points": "Function points",
+                "Other": "Other",
+                "Not used": "Not used",
+                "Considered without any metric": "Considered without any metric"
+            },
+            "Team's prior experience": {
+                "Considered": "Considered",
+                "Not Considered": "Not Considered"
+            },
+            "Team's skill level": {
+                "Considered": "Considered",
+                "Not Considered": "Not Considered"
+            },
+            "Non functional requirements": {
+                "Performance": "Performance",
+                "Security": "Security",
+                "Availability": "Availability",
+                "Reliability": "Reliability",
+                "Maintainability": "Maintainability",
+                "Other": "Other",  # Changed period to comma
+                "Not considered": "Not considered"
+            },
+            "Distributed teams' issues": {
+                "Considered": "Considered",
+                "Not Considered": "Not Considered",
+                "Not applicable": "Not applicable"
+            },
+            "Customer Communication": {
+                "Considered": "Considered",
+                "Not Considered": "Not Considered"
+            }
+        },
+        'Effort estimate': {
+            "Estimated effort": {
+                "Estimate value(s)": "Estimate value(s)"
+            },
+            "Actual effort": {
+                "Value": "Value"
+            },
+            "Type": {
+                "Point": "Point",
+                "Three point": "Three point",
+                "Distribution": "Distribution",
+                "Other": "Other"
+            },
+            "Unit": {
+                "House/days": "House/days",
+                "Pair days": "Pair/days",
+                "Ideal hours": "Ideal hours",
+                "Other": "Other"
+            },
+            "Accuracy Level": {
+                "Value": "Value"
+            },
+            "Accuracy measure": {
+                "Mean Magnitude of Relative Error": "Mean Magnitude of Relative Error",
+                "Median Magnitude of Relative Error": "Median Magnitude of Relative Error",
+                "Bias of Relative Error": "Bias of Relative Error",
+                "Other": "Other",
+                "Not used": "Not used"
+            }
+        }
+    }
+}
+
+
+leaves = get_leaf_nodes(new_taxonomy)
+print(leaves)
+
+ncat = extract_ncat(new_taxonomy)
+nchar = extract_nchar(new_taxonomy)
+depths_cat = extract_depths_cat(new_taxonomy)
+depths_char = extract_depths_char(new_taxonomy)
+
+print("Number of categories (ncat):", ncat)
+print("Number of characteristics (nchar):", nchar)
+print("Depths of categories:", depths_cat)
+print("Depths of characteristics:", depths_char)
+
+robustness_value = calculate_r_t(new_taxonomy)
+print(f"Robustness R(T): {robustness_value:.4f}")
+conciseness= calculate_conciseness(ncat, nchar, depths_cat, depths_char)
+print(f'The conciseness of the taxonomy is: {conciseness}')
+```
+
