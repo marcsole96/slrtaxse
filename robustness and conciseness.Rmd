@@ -904,3 +904,605 @@ conciseness= calculate_conciseness(ncat, nchar, depths_cat, depths_char)
 print(f'The conciseness of the taxonomy is: {conciseness}')
 ```
 
+```{python}
+import pandas as pd
+import numpy as np
+from sklearn.manifold import TSNE
+from sklearn.preprocessing import LabelEncoder
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D  # Import for 3D plotting
+from transformers import AutoTokenizer, AutoModel
+import torch
+import matplotlib
+plt.clf()
+
+plt.style.use('seaborn-v0_8-whitegrid')  # You can change this to any available style
+
+plt.rcParams['font.family'] = 'serif'
+
+
+# Step 1: Define the sets
+# Combine the sets into a dictionary
+sets = {
+    'Bajta': {"Agile", "Analysis", "Availability", "Baseline comparison", "Bidding", "CBR", "CMMI", "COCOMO", "Commissioning", "Conceptualization", "Delphi", "Detail planning", "Design", "Distant onshore", "Expert judgment", "Estimated value", "Execution", "Effort hours", "Feasibility study", "Finance", "Fuzzy similarity", "GA", "Group-based estimation", "Healthcare", "Hardware", "Implementation", "Individual", "Machine learning", "Maintainability", "Maintenance", "Near offshore", "Non-machine learning", "Not considered", "Number of team members", "Performance", "Portfolio", "Preliminary planning", "Reliability", "Research & development", "Risk", "Security", "Sensitivity analysis", "Size report", "Socio-cultural distance", "Statistical analysis", "Staff/cost", "System investigation", "Temporal distance", "Testing", "Value", "Variation reduction"},
+    'Britto_2017': {"Accessibility level", "Adaptation complexity", "Anchor count", "Architecture", "Association center slot count", "Association slot size", "Attribute count", "Authoring tool type", "Availability level", "Class complexity", "Class coupling", "Client script count", "Cluster count", "Cluster node size", "Cluster slot count", "Cohesion", "Cohesion complexity", "Collection center slot count", "Collection slot size", "Comment count", "Communication level", "Compactness", "Component complexity", "Component count", "Component granularity level", "Component slot count", "Concern coupling", "Concern module count", "Concern operation count", "Concurrency level", "Connectivity density", "Control flow complexity", "Cyclomatic complexity", "Data Web points", "Data flow complexity", "Data usage complexity", "Database size", "Deployment platform experience level", "Design volatility", "Development restriction", "Difficulty level", "Diffusion cut count", "Documentation level", "Domain experience level", "Entity count", "Experience level", "Feature count", "Flexibility level", "Focus factor", "High feature count", "IT literacy", "In-house experience", "Indifferent concern count", "Information slot count", "Infrastructure", "Inner/sub concern count", "Innovation level", "Input complexity", "Installability level", "Integration with legacy systems", "Interface complexity", "International Function Point Users Group", "Layout complexity", "Lessons learned repository", "Lines of code", "Link count", "Low feature count", "Maintainability level", "Mapped workflows", "Media allocation", "Media count", "Media duration", "Memory efficiency level", "Metrics program", "Model association complexity", "Model collection complexity", "Model link complexity", "Model node size", "Model slot size", "Modularity level", "Module attribute count", "Module count", "Module point cut count", "Motivation level", "New Web page count", "New complexity", "New media count", "Node count", "Node slot size", "Novelty level", "Number of programming languages", "Number of projects in parallel", "OO experience level", "Object-Oriented Function Points", "Operation count", "Operational mode", "Output complexity", "Page complexity", "Personality", "Platform support level", "Platform volatility level", "Portability level", "Process efficiency level", "Processing requirements", "Productivity level", "Program count", "Programming language experience level", "Project management level", "Publishing model unit count", "Publishing unit count", "Quality level", "Rapid app development", "Readability level", "Reliability level", "Requirements clarity level", "Requirements novelty level", "Requirements volatility level", "Resource level", "Reusability level", "Reused comment count", "Reused component count", "Reused high feature count", "Reused lines of code", "Reused low feature count", "Reused media allocation", "Reused media count", "Reused program count", "Risk level", "Robustness level", "SPI program", "Scalability level", "Section count", "Security level", "Segment count", "Semantic association count", "Server script count", "Slot count", "Slot granularity level", "Software development experience", "Software reuse", "Stability level", "Statement count", "Storage constraint", "Structure", "Team capability", "Team size", "Technical factors", "Testability level", "Time efficiency level", "Time restriction", "Tool experience level", "Total complexity", "Trainability level", "Type", "Usability level", "Use case count", "Web objects", "Web page allocation", "Web page count", "Work Team level"},
+    'Britto_2016': {"Centralized", "distributed", "Early", "Estimator", "Early & Late", "Estimator & Provider", "geographic distance", "geographic distance", "late", "legal entity", "location", "provider", "semi-distributed", "temporal distance", "temporal distance"},
+    'Dasthi': {"ANN", "Analogy Base", "COCOMO", "Evolutionary", "Expert Judgment", "FUZZY", "SEER-SEM", "SLIM", "Swarm"},
+    'Mendes': {"Absolute", "both", "complexity", "functionality", "Directly", "Early size metric", "Empirically", "indirectly", "interval", "Length", "late size metric", "media", "none", "Nominal", "nonspecific", "ordinal", "other", "Problem oriented metric", "program/script", "ratio", "solution oriented metric", "Specific", "theoretically", "Web application", "Web hypermedia application", "Web software application"},
+    'Usman': {"Analysis", "all", "analogy", "availability", "bidding", "Close Onshore", "Co-located", "Communications industry", "Considered", "crystal", "customized XP", "customized scrum", "daily", "design", "distribution", "education", "expert judgement", "DSDM", "Distant Onshore", "Estimate value(s)", "FDD", "Far Offshore", "financial", "function points", "Hours/days", "health", "ideal hours", "implementation", "kanban", "maintainability", "maintenance", "manufacturing", "MMRE", "MdMRE", "Near Offshore", "No. of team members", "not applicable", "not considered", "not used", "Other", "Performance", "Planning poker", "Point", "pair days", "Release", "reliability", "retail/wholesale", "Single", "scrum", "security", "sprint", "Story points", "testing", "three point", "task", "transportation", "UC points", "User story", "Value", "XP"}
+}
+
+
+# Step 2: Flatten the sets into a dataframe (assuming 'sets' is already defined)
+words = []
+labels = []
+for label, words_set in sets.items():
+    for word in words_set:
+        words.append(word)
+        labels.append(label)
+
+# Create a dataframe
+df = pd.DataFrame({'Word': words, 'Set': labels})
+
+# Step 3: Load the pre-trained model and tokenizer
+model_name = "jinaai/jina-embeddings-v3"
+if 'model' not in locals() or 'tokenizer' not in locals():
+    print("Loading model and tokenizer...")
+    model = AutoModel.from_pretrained(model_name, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+else:
+    print("Model and tokenizer are already loaded.")
+
+# Step 4: Get the embeddings for each word
+def get_embeddings(word):
+    inputs = tokenizer(word, return_tensors="pt", truncation=True, padding=True)
+    with torch.no_grad():
+        outputs = model(**inputs)
+    return outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
+
+embeddings = np.array([get_embeddings(word) for word in df['Word']])
+
+# Step 5: Perform t-SNE (now in 2D)
+tsne = TSNE(n_components=2, perplexity=30, random_state=5)
+embeddings_2d = tsne.fit_transform(embeddings)
+
+# Step 6: Convert string labels to numeric labels for coloring
+label_encoder = LabelEncoder()
+numeric_labels = label_encoder.fit_transform(labels)
+
+# Step 7: Create the 2D scatter plot
+fig, ax = plt.subplots(figsize=(10, 7))
+
+# Plot the 2D scatter with the numeric labels for colors
+scatter = ax.scatter(embeddings_2d[:, 0], embeddings_2d[:, 1], 
+                     c=numeric_labels, cmap='Set1', s=100)
+
+# Annotate each point with the word
+for i, word in enumerate(df['Word']):
+    ax.text(embeddings_2d[i, 0] + 0.1, embeddings_2d[i, 1] + 0.1, word, fontsize=9)
+
+# Step 8: Add labels and title
+ax.set_title("2D t-SNE Visualization of Word Embeddings")
+ax.set_xlabel("t-SNE Dimension 1")
+ax.set_ylabel("t-SNE Dimension 2")
+
+# Step 9: Move the legend outside of the plot
+legend_labels = label_encoder.classes_
+handles = [plt.Line2D([0], [0], marker='o', color='w', 
+                      markerfacecolor=plt.cm.Set2(i / len(legend_labels)), markersize=5) 
+           for i in range(len(legend_labels))]
+ax.legend(handles, legend_labels, title="Set", loc="center left", bbox_to_anchor=(1.05, 0.5), borderaxespad=0.)
+
+# Step 10: Show the plot
+plt.tight_layout()  # Ensures proper spacing with the legend outside
+plt.savefig('word_embeddings.png', dpi=300, bbox_inches='tight')
+plt.show()
+```
+
+#3D PLOT
+```{python}
+import plotly.express as px
+import pandas as pd
+import numpy as np
+import torch
+from transformers import AutoModel, AutoTokenizer
+import umap.umap_ as umap
+from sklearn.preprocessing import LabelEncoder
+plt.clf()
+
+plt.style.use('seaborn-v0_8-whitegrid')  # You can change this to any available style
+
+plt.rcParams['font.family'] = 'serif'
+# Step 2: Flatten the sets into a dataframe (assuming sets is already defined)
+words = []
+labels = []
+for label, words_set in sets.items():
+    for word in words_set:
+        words.append(word)
+        labels.append(label)
+
+# Create a dataframe
+df = pd.DataFrame({'Word': words, 'Set': labels})
+
+# Step 3: Load the pre-trained model and tokenizer
+model_name = "jinaai/jina-embeddings-v3"
+if 'model' not in locals() or 'tokenizer' not in locals():
+    print("Loading model and tokenizer...")
+    model = AutoModel.from_pretrained(model_name, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+else:
+    print("Model and tokenizer are already loaded.")
+
+# Step 4: Get the embeddings for each word
+def get_embeddings(word):
+    inputs = tokenizer(word, return_tensors="pt", truncation=True, padding=True)
+    with torch.no_grad():
+        outputs = model(**inputs)
+    return outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
+
+embeddings = np.array([get_embeddings(word) for word in df['Word']])
+
+# Step 5: Perform 3D UMAP (with 3 components)
+umap_model = umap.UMAP(n_components=3, random_state=5)
+embeddings_3d = umap_model.fit_transform(embeddings)
+
+# Step 6: Convert string labels to numeric labels for coloring
+label_encoder = LabelEncoder()
+numeric_labels = label_encoder.fit_transform(labels)
+
+# Step 7: Create the interactive 3D plot with Plotly
+fig = px.scatter_3d(df, x=embeddings_3d[:, 0], y=embeddings_3d[:, 1], z=embeddings_3d[:, 2],
+                    color=labels, text=words,
+                    labels={'x': 'UMAP Dimension 1', 'y': 'UMAP Dimension 2', 'z': 'UMAP Dimension 3'},
+                    title="3D UMAP Visualization of Word Embeddings")
+
+# Customize the layout for better viewing
+fig.update_traces(marker=dict(size=5, opacity=0.8), selector=dict(mode='markers+text'))
+fig.update_layout(scene=dict(xaxis_title='UMAP Dimension 1',
+                             yaxis_title='UMAP Dimension 2',
+                             zaxis_title='UMAP Dimension 3'))
+plt.savefig('3d_word_embedding.png', dpi=300, bbox_inches='tight')
+
+# Show the interactive plot
+fig.show()
+```
+
+
+
+# K-means Plot
+```{python}
+import umap.umap_ as umap
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+from scipy.spatial import ConvexHull
+from transformers import AutoTokenizer, AutoModel
+import torch
+from sklearn.metrics.pairwise import cosine_similarity
+from matplotlib.lines import Line2D  # Add this import at the top of your code
+
+plt.clf()
+
+plt.style.use('seaborn-v0_8-whitegrid')  # You can change this to any available style
+
+plt.rcParams['font.family'] = 'serif'
+# Step 1: Define the sets
+Bajta = {"Agile", "Analysis", "Availability", "Baseline comparison", "Bidding", "CBR", "CMMI", "COCOMO", "Commissioning", "Conceptualization", "Delphi", "Detail planning", "Design", "Distant onshore", "Expert judgment", "Estimated value", "Execution", "Effort hours", "Feasibility study", "Finance", "Fuzzy similarity", "GA", "Group-based estimation", "Healthcare", "Hardware", "Implementation", "Individual", "Machine learning", "Maintainability", "Maintenance", "Near offshore", "Non-machine learning", "Not considered", "Number of team members", "Performance", "Portfolio", "Preliminary planning", "Reliability", "Research & development", "Risk", "Security", "Sensitivity analysis", "Size report", "Socio-cultural distance", "Statistical analysis", "Staff/cost", "System investigation", "Temporal distance", "Testing", "Value", "Variation reduction"}
+Britto_2017 = {"Accessibility level", "Adaptation complexity", "Anchor count", "Architecture", "Association center slot count", "Association slot size", "Attribute count", "Authoring tool type", "Availability level", "Class complexity", "Class coupling", "Client script count", "Cluster count", "Cluster node size", "Cluster slot count", "Cohesion", "Cohesion complexity", "Collection center slot count", "Collection slot size", "Comment count", "Communication level", "Compactness", "Component complexity", "Component count", "Component granularity level", "Component slot count", "Concern coupling", "Concern module count", "Concern operation count", "Concurrency level", "Connectivity density", "Control flow complexity", "Cyclomatic complexity", "Data Web points", "Data flow complexity", "Data usage complexity", "Database size", "Deployment platform experience level", "Design volatility", "Development restriction", "Difficulty level", "Diffusion cut count", "Documentation level", "Domain experience level", "Entity count", "Experience level", "Feature count", "Flexibility level", "Focus factor", "High feature count", "IT literacy", "In-house experience", "Indifferent concern count", "Information slot count", "Infrastructure", "Inner/sub concern count", "Innovation level", "Input complexity", "Installability level", "Integration with legacy systems", "Interface complexity", "International Function Point Users Group", "Layout complexity", "Lessons learned repository", "Lines of code", "Link count", "Low feature count", "Maintainability level", "Mapped workflows", "Media allocation", "Media count", "Media duration", "Memory efficiency level", "Metrics program", "Model association complexity", "Model collection complexity", "Model link complexity", "Model node size", "Model slot size", "Modularity level", "Module attribute count", "Module count", "Module point cut count", "Motivation level", "New Web page count", "New complexity", "New media count", "Node count", "Node slot size", "Novelty level", "Number of programming languages", "Number of projects in parallel", "OO experience level", "Object-Oriented Function Points", "Operation count", "Operational mode", "Output complexity", "Page complexity", "Personality", "Platform support level", "Platform volatility level", "Portability level", "Process efficiency level", "Processing requirements", "Productivity level", "Program count", "Programming language experience level", "Project management level", "Publishing model unit count", "Publishing unit count", "Quality level", "Rapid app development", "Readability level", "Reliability level", "Requirements clarity level", "Requirements novelty level", "Requirements volatility level", "Resource level", "Reusability level", "Reused comment count", "Reused component count", "Reused high feature count", "Reused lines of code", "Reused low feature count", "Reused media allocation", "Reused media count", "Reused program count", "Risk level", "Robustness level", "SPI program", "Scalability level", "Section count", "Security level", "Segment count", "Semantic association count", "Server script count", "Slot count", "Slot granularity level", "Software development experience", "Software reuse", "Stability level", "Statement count", "Storage constraint", "Structure", "Team capability", "Team size", "Technical factors", "Testability level", "Time efficiency level", "Time restriction", "Tool experience level", "Total complexity", "Trainability level", "Type", "Usability level", "Use case count", "Web objects", "Web page allocation", "Web page count", "Work Team level"}
+Britto_2016 = {"Centralized", "distributed", "Early", "Estimator", "Early & Late", "Estimator & Provider", "geographic distance", "geographic distance", "late", "legal entity", "location", "provider", "semi-distributed", "temporal distance", "temporal distance"}
+Dasthi = {"ANN", "Analogy Base", "COCOMO", "Evolutionary", "Expert Judgment", "FUZZY", "SEER-SEM", "SLIM", "Swarm"}
+Mendes = {"Absolute", "both", "complexity", "functionality", "Directly", "Early size metric", "Empirically", "indirectly", "interval", "Length", "late size metric", "media", "none", "Nominal", "nonspecific", "ordinal", "other", "Problem oriented metric", "program/script", "ratio", "solution oriented metric", "Specific", "theoretically", "Web application", "Web hypermedia application", "Web software application"}
+Usman = {"Analysis", "all", "analogy", "availability", "bidding", "Close Onshore", "Co-located", "Communications industry", "Considered", "crystal", "customized XP", "customized scrum", "daily", "design", "distribution", "education", "expert judgement", "DSDM", "Distant Onshore", "Estimate value(s)", "FDD", "Far Offshore", "financial", "function points", "Hours/days", "health", "ideal hours", "implementation", "kanban", "maintainability", "maintenance", "manufacturing", "MMRE", "MdMRE", "Near Offshore", "No. of team members", "not applicable", "not considered", "not used", "Other", "Performance", "Planning poker", "Point", "pair days", "Release", "reliability", "retail/wholesale", "Single", "scrum", "security", "sprint", "Story points", "testing", "three point", "task", "transportation", "UC points", "User story", "Value", "XP"}
+
+# Combine the sets into a dictionary
+sets = {
+    'Bajta': Bajta,
+    'Britto_2017': Britto_2017,
+    'Britto_2016': Britto_2016,
+    'Dasthi': Dasthi,
+    'Mendes': Mendes,
+    'Usman': Usman
+}
+
+# Step 2: Flatten the sets into a dataframe
+words = []
+labels = []
+for label, words_set in sets.items():
+    for word in words_set:
+        words.append(word.lower())
+        labels.append(label)
+
+# Create a dataframe
+df = pd.DataFrame({'Word': words, 'Set': labels})
+
+# Step 3: Load the pre-trained model and tokenizer
+model_name = "jinaai/jina-embeddings-v3"
+if 'model' not in locals() or 'tokenizer' not in locals():
+    print("Loading model and tokenizer...")
+    model = AutoModel.from_pretrained(model_name, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+else:
+    print("Model and tokenizer are already loaded.")
+
+# Step 4: Get the embeddings for each word
+def get_embeddings(word):
+    inputs = tokenizer(word, return_tensors="pt", truncation=True, padding=True)
+    with torch.no_grad():
+        outputs = model(**inputs)
+    return outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
+
+embeddings = np.array([get_embeddings(word) for word in df['Word']])
+
+# Step 5: Perform 2D UMAP
+umap_model = umap.UMAP(n_components=2, random_state=5)
+embeddings_2d = umap_model.fit_transform(embeddings)
+
+# Step 6: Create a color map that reflects the set labels
+unique_labels = list(df['Set'].unique())  # Get the unique set labels
+cmap = plt.cm.get_cmap('tab10', len(unique_labels))  # Create a colormap with enough colors
+
+# Step 7: Run K-means on UMAP embeddings
+num_clusters = len(unique_labels)  # Set number of clusters to match unique labels
+kmeans = KMeans(n_clusters=num_clusters, n_init=10, random_state=5)
+kmeans_labels = kmeans.fit_predict(embeddings_2d)
+
+# Step 8: Generate top 4 names for each cluster
+top_n = 3  # Set how many top words to display for each cluster
+cluster_names = []
+
+for i in range(num_clusters):
+    # Get the embeddings for words in the current cluster
+    cluster_indices = np.where(kmeans_labels == i)[0]
+    cluster_embeddings = embeddings[cluster_indices]
+    
+    # Calculate the centroid of the cluster
+    cluster_centroid = np.mean(cluster_embeddings, axis=0).reshape(1, -1)
+    
+    # Calculate cosine similarity of centroid to all words' embeddings to find closest words
+    similarities = cosine_similarity(cluster_centroid, embeddings).flatten()
+    
+    # Get the indices of the top 4 closest words
+    closest_word_indices = np.argsort(similarities)[-top_n:][::-1]  # Get indices of top 4 closest words
+    
+    # Get the words corresponding to these indices
+    closest_words = df['Word'].iloc[closest_word_indices].tolist()
+    
+    # Store the top 4 closest words as the cluster name
+    cluster_names.append(closest_words)
+
+# Step 9: Plot with translucent shapes for each K-means cluster and annotate with top 4 names
+plt.figure(figsize=(10, 7))
+color_map = {label: cmap(i) for i, label in enumerate(unique_labels)}
+
+# Plot the 2D scatter with the original labels for colors
+plt.scatter(embeddings_2d[:, 0], embeddings_2d[:, 1], 
+            c=[color_map[label] for label in df['Set']], s=50)
+
+# Draw convex hulls around each cluster and annotate with cluster names
+for i in range(num_clusters):
+    cluster_points = embeddings_2d[kmeans_labels == i]
+    
+    if len(cluster_points) >= 3:  # ConvexHull requires at least 3 points
+        hull = ConvexHull(cluster_points)
+        hull_points = cluster_points[hull.vertices]
+        plt.fill(hull_points[:, 0], hull_points[:, 1], alpha=0.2, 
+                 color=cmap(i), label=f'Cluster {i+1}')
+    
+    # Annotate with the top 4 cluster names at the centroid location
+    cluster_centroid_2d = np.mean(cluster_points, axis=0)
+    # Join the top 4 words into a string with commas for cleaner display
+    cluster_name_text = ', '.join(cluster_names[i]) 
+    
+    # Annotate with the top words at the centroid, with slightly smaller font size
+    plt.text(cluster_centroid_2d[0], cluster_centroid_2d[1], cluster_name_text, 
+             fontsize=7, ha='center', color='black', fontweight='bold')
+
+# Step 10: Add plot title and axis labels
+plt.title("2D UMAP Visualization of Word Embeddings with K-means Clusters")
+plt.xlabel("UMAP Dimension 1")
+plt.ylabel("UMAP Dimension 2")
+
+# Step 11: Show the plot with the updated legend
+legend_handles = [Line2D([0], [0], marker='o', color='w', 
+                         markerfacecolor=cmap(i), markersize=10) 
+                  for i, label in enumerate(unique_labels)]
+plt.legend(legend_handles, unique_labels, title="Literature", loc="center left", bbox_to_anchor=(1, 0.5))
+
+# Adjust layout to ensure the legend is not clipped
+plt.tight_layout()
+
+
+# Step 10: Save the plot in high resolution
+plt.savefig('word_embeddings_kmeans.png', dpi=300, bbox_inches='tight')
+
+# Show the plot
+plt.show()
+```
+
+```{python}
+import torch
+from transformers import AutoModel, AutoTokenizer
+import pandas as pd
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+
+plt.clf()
+
+plt.style.use('seaborn-v0_8-whitegrid')  # You can change this to any available style
+
+plt.rcParams['font.family'] = 'serif'
+
+# Define the sets of words
+Bajta = {"Agile", "Analysis", "Availability", "Baseline comparison", "Bidding", "CBR", "CMMI", "COCOMO", "Commissioning", "Conceptualization", "Delphi", "Detail planning", "Design", "Distant onshore", "Expert judgment", "Estimated value", "Execution", "Effort hours", "Feasibility study", "Finance", "Fuzzy similarity", "GA", "Group-based estimation", "Healthcare", "Hardware", "Implementation", "Individual", "Machine learning", "Maintainability", "Maintenance", "Near offshore", "Non-machine learning", "Not considered", "Number of team members", "Performance", "Portfolio", "Preliminary planning", "Reliability", "Research & development", "Risk", "Security", "Sensitivity analysis", "Size report", "Socio-cultural distance", "Statistical analysis", "Staff/cost", "System investigation", "Temporal distance", "Testing", "Value", "Variation reduction"}
+Britto_2017 = {"Accessibility level", "Adaptation complexity", "Anchor count", "Architecture", "Association center slot count", "Association slot size", "Attribute count", "Authoring tool type", "Availability level", "Class complexity", "Class coupling", "Client script count", "Cluster count", "Cluster node size", "Cluster slot count", "Cohesion", "Cohesion complexity", "Collection center slot count", "Collection slot size", "Comment count", "Communication level", "Compactness", "Component complexity", "Component count", "Component granularity level", "Component slot count", "Concern coupling", "Concern module count", "Concern operation count", "Concurrency level", "Connectivity density", "Control flow complexity", "Cyclomatic complexity", "Data Web points", "Data flow complexity", "Data usage complexity", "Database size", "Deployment platform experience level", "Design volatility", "Development restriction", "Difficulty level", "Diffusion cut count", "Documentation level", "Domain experience level", "Entity count", "Experience level", "Feature count", "Flexibility level", "Focus factor", "High feature count", "IT literacy", "In-house experience", "Indifferent concern count", "Information slot count", "Infrastructure", "Inner/sub concern count", "Innovation level", "Input complexity", "Installability level", "Integration with legacy systems", "Interface complexity", "International Function Point Users Group", "Layout complexity", "Lessons learned repository", "Lines of code", "Link count", "Low feature count", "Maintainability level", "Mapped workflows", "Media allocation", "Media count", "Media duration", "Memory efficiency level", "Metrics program", "Model association complexity", "Model collection complexity", "Model link complexity", "Model node size", "Model slot size", "Modularity level", "Module attribute count", "Module count", "Module point cut count", "Motivation level", "New Web page count", "New complexity", "New media count", "Node count", "Node slot size", "Novelty level", "Number of programming languages", "Number of projects in parallel", "OO experience level", "Object-Oriented Function Points", "Operation count", "Operational mode", "Output complexity", "Page complexity", "Personality", "Platform support level", "Platform volatility level", "Portability level", "Process efficiency level", "Processing requirements", "Productivity level", "Program count", "Programming language experience level", "Project management level", "Publishing model unit count", "Publishing unit count", "Quality level", "Rapid app development", "Readability level", "Reliability level", "Requirements clarity level", "Requirements novelty level", "Requirements volatility level", "Resource level", "Reusability level", "Reused comment count", "Reused component count", "Reused high feature count", "Reused lines of code", "Reused low feature count", "Reused media allocation", "Reused media count", "Reused program count", "Risk level", "Robustness level", "SPI program", "Scalability level", "Section count", "Security level", "Segment count", "Semantic association count", "Server script count", "Slot count", "Slot granularity level", "Software development experience", "Software reuse", "Stability level", "Statement count", "Storage constraint", "Structure", "Team capability", "Team size", "Technical factors", "Testability level", "Time efficiency level", "Time restriction", "Tool experience level", "Total complexity", "Trainability level", "Type", "Usability level", "Use case count", "Web objects", "Web page allocation", "Web page count", "Work Team level"}
+Britto_2016 = {"Centralized", "distributed", "Early", "Estimator", "Early & Late", "Estimator & Provider", "geographic distance", "geographic distance", "late", "legal entity", "location", "provider", "semi-distributed", "temporal distance", "temporal distance"}
+Dasthi = {"ANN", "Analogy Base", "COCOMO", "Evolutionary", "Expert Judgment", "FUZZY", "SEER-SEM", "SLIM", "Swarm"}
+Mendes = {"Absolute", "both", "complexity", "functionality", "Directly", "Early size metric", "Empirically", "indirectly", "interval", "Length", "late size metric", "media", "none", "Nominal", "nonspecific", "ordinal", "other", "Problem oriented metric", "program/script", "ratio", "solution oriented metric", "Specific", "theoretically", "Web application", "Web hypermedia application", "Web software application"}
+Usman = {"Analysis", "all", "analogy", "availability", "bidding", "Close Onshore", "Co-located", "Communications industry", "Considered", "crystal", "customized XP", "customized scrum", "daily", "design", "distribution", "education", "expert judgement", "DSDM", "Distant Onshore", "Estimate value(s)", "FDD", "Far Offshore", "financial", "function points", "Hours/days", "health", "ideal hours", "implementation", "kanban", "maintainability", "maintenance", "manufacturing", "MMRE", "MdMRE", "Near Offshore", "No. of team members", "not applicable", "not considered", "not used", "Other", "Performance", "Planning poker", "Point", "pair days", "Release", "reliability", "retail/wholesale", "Single", "scrum", "security", "sprint", "Story points", "testing", "three point", "task", "transportation", "UC points", "User story", "Value", "XP"}
+
+# Combine all sets into a single list with labels
+word_sets = {
+    "Bajta": Bajta,
+    "Britto_2016": Britto_2016,
+    "Britto_2017": Britto_2017,
+    "Dasthi": Dasthi,
+    "Mendes": Mendes,
+    "Usman": Usman
+}
+
+word_sets = {label: {word.lower() for word in words} for label, words in word_sets.items()}
+
+# Load model and tokenizer
+model_name = "jinaai/jina-embeddings-v3"
+if 'model' not in locals() or 'tokenizer' not in locals():
+    print("Loading model and tokenizer...")
+    model = AutoModel.from_pretrained(model_name, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+else:
+    print("Model and tokenizer are already loaded.")
+
+# Function to get embedding for a word
+def get_embedding(word):
+    inputs = tokenizer(word, return_tensors="pt")
+    outputs = model(**inputs)
+    return outputs.last_hidden_state.mean(dim=1).detach().numpy()
+
+# Collect embeddings
+embeddings = []
+words = []
+labels = []
+
+for label, words_set in word_sets.items():
+    for word in words_set:
+        embedding = get_embedding(word)
+        embeddings.append(embedding)
+        words.append(word)
+        labels.append(label)
+
+# Create a DataFrame with words, labels, and embeddings
+embedding_df = pd.DataFrame({
+    "Word": words,
+    "Label": labels,
+    "Embedding": [emb[0] for emb in embeddings]
+})
+
+# Pivot the DataFrame to have the set labels as columns
+pivoted_df = embedding_df.pivot(index="Word", columns="Label", values="Embedding")
+
+# Flatten the embeddings (if you want to display them properly as vectors, you might want to separate them)
+# Convert the embedding vectors to string for display purposes (or keep them as arrays if you're working with them in computations)
+pivoted_df = pivoted_df.applymap(lambda x: str(x.tolist()) if isinstance(x, np.ndarray) else x)
+
+# Display the pivoted DataFrame
+print(pivoted_df)
+```
+
+# Another table showing the common words between papers, a bit harder to read
+
+```{python}
+import torch
+from transformers import AutoModel, AutoTokenizer
+import pandas as pd
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+
+plt.clf()
+
+plt.style.use('seaborn-v0_8-whitegrid')  # You can change this to any available style
+
+plt.rcParams['font.family'] = 'serif'
+
+# Define the sets of words
+Bajta = {"Agile", "Analysis", "Availability", "Baseline comparison", "Bidding", "CBR", "CMMI", "COCOMO", "Commissioning", "Conceptualization", "Delphi", "Detail planning", "Design", "Distant onshore", "Expert judgment", "Estimated value", "Execution", "Effort hours", "Feasibility study", "Finance", "Fuzzy similarity", "GA", "Group-based estimation", "Healthcare", "Hardware", "Implementation", "Individual", "Machine learning", "Maintainability", "Maintenance", "Near offshore", "Non-machine learning", "Not considered", "Number of team members", "Performance", "Portfolio", "Preliminary planning", "Reliability", "Research & development", "Risk", "Security", "Sensitivity analysis", "Size report", "Socio-cultural distance", "Statistical analysis", "Staff/cost", "System investigation", "Temporal distance", "Testing", "Value", "Variation reduction"}
+Britto_2017 = {"Accessibility level", "Adaptation complexity", "Anchor count", "Architecture", "Association center slot count", "Association slot size", "Attribute count", "Authoring tool type", "Availability level", "Class complexity", "Class coupling", "Client script count", "Cluster count", "Cluster node size", "Cluster slot count", "Cohesion", "Cohesion complexity", "Collection center slot count", "Collection slot size", "Comment count", "Communication level", "Compactness", "Component complexity", "Component count", "Component granularity level", "Component slot count", "Concern coupling", "Concern module count", "Concern operation count", "Concurrency level", "Connectivity density", "Control flow complexity", "Cyclomatic complexity", "Data Web points", "Data flow complexity", "Data usage complexity", "Database size", "Deployment platform experience level", "Design volatility", "Development restriction", "Difficulty level", "Diffusion cut count", "Documentation level", "Domain experience level", "Entity count", "Experience level", "Feature count", "Flexibility level", "Focus factor", "High feature count", "IT literacy", "In-house experience", "Indifferent concern count", "Information slot count", "Infrastructure", "Inner/sub concern count", "Innovation level", "Input complexity", "Installability level", "Integration with legacy systems", "Interface complexity", "International Function Point Users Group", "Layout complexity", "Lessons learned repository", "Lines of code", "Link count", "Low feature count", "Maintainability level", "Mapped workflows", "Media allocation", "Media count", "Media duration", "Memory efficiency level", "Metrics program", "Model association complexity", "Model collection complexity", "Model link complexity", "Model node size", "Model slot size", "Modularity level", "Module attribute count", "Module count", "Module point cut count", "Motivation level", "New Web page count", "New complexity", "New media count", "Node count", "Node slot size", "Novelty level", "Number of programming languages", "Number of projects in parallel", "OO experience level", "Object-Oriented Function Points", "Operation count", "Operational mode", "Output complexity", "Page complexity", "Personality", "Platform support level", "Platform volatility level", "Portability level", "Process efficiency level", "Processing requirements", "Productivity level", "Program count", "Programming language experience level", "Project management level", "Publishing model unit count", "Publishing unit count", "Quality level", "Rapid app development", "Readability level", "Reliability level", "Requirements clarity level", "Requirements novelty level", "Requirements volatility level", "Resource level", "Reusability level", "Reused comment count", "Reused component count", "Reused high feature count", "Reused lines of code", "Reused low feature count", "Reused media allocation", "Reused media count", "Reused program count", "Risk level", "Robustness level", "SPI program", "Scalability level", "Section count", "Security level", "Segment count", "Semantic association count", "Server script count", "Slot count", "Slot granularity level", "Software development experience", "Software reuse", "Stability level", "Statement count", "Storage constraint", "Structure", "Team capability", "Team size", "Technical factors", "Testability level", "Time efficiency level", "Time restriction", "Tool experience level", "Total complexity", "Trainability level", "Type", "Usability level", "Use case count", "Web objects", "Web page allocation", "Web page count", "Work Team level"}
+Britto_2016 = {"Centralized", "distributed", "Early", "Estimator", "Early & Late", "Estimator & Provider", "geographic distance", "geographic distance", "late", "legal entity", "location", "provider", "semi-distributed", "temporal distance", "temporal distance"}
+Dasthi = {"ANN", "Analogy Base", "COCOMO", "Evolutionary", "Expert Judgment", "FUZZY", "SEER-SEM", "SLIM", "Swarm"}
+Mendes = {"Absolute", "both", "complexity", "functionality", "Directly", "Early size metric", "Empirically", "indirectly", "interval", "Length", "late size metric", "media", "none", "Nominal", "nonspecific", "ordinal", "other", "Problem oriented metric", "program/script", "ratio", "solution oriented metric", "Specific", "theoretically", "Web application", "Web hypermedia application", "Web software application"}
+Usman = {"Analysis", "all", "analogy", "availability", "bidding", "Close Onshore", "Co-located", "Communications industry", "Considered", "crystal", "customized XP", "customized scrum", "daily", "design", "distribution", "education", "expert judgement", "DSDM", "Distant Onshore", "Estimate value(s)", "FDD", "Far Offshore", "financial", "function points", "Hours/days", "health", "ideal hours", "implementation", "kanban", "maintainability", "maintenance", "manufacturing", "MMRE", "MdMRE", "Near Offshore", "No. of team members", "not applicable", "not considered", "not used", "Other", "Performance", "Planning poker", "Point", "pair days", "Release", "reliability", "retail/wholesale", "Single", "scrum", "security", "sprint", "Story points", "testing", "three point", "task", "transportation", "UC points", "User story", "Value", "XP"}
+
+# Create a dictionary to store the sets
+sets = {
+    "Bajta": Bajta,
+    "Britto_2016": Britto_2016,
+    "Britto_2017": Britto_2017,
+    "Dasthi": Dasthi,
+    "Mendes": Mendes,
+    "Usman": Usman
+}
+
+# Load the pre-trained model and tokenizer
+model_name = "jinaai/jina-embeddings-v3"
+if 'model' not in locals() or 'tokenizer' not in locals():
+    print("Loading model and tokenizer...")
+    model = AutoModel.from_pretrained(model_name, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+else:
+    print("Model and tokenizer are already loaded.")
+
+# Function to normalize text to lowercase
+def normalize_words(words):
+    return {word.lower() for word in words}
+
+# Normalize all words in the sets to lowercase
+normalized_sets = {set_name: normalize_words(word_set) for set_name, word_set in sets.items()}
+
+# Function to get embeddings for a list of words
+def get_embeddings(words):
+    inputs = tokenizer(list(words), padding=True, truncation=True, return_tensors='pt')
+    with torch.no_grad():
+        embeddings = model(**inputs).last_hidden_state.mean(dim=1)  # Mean pooling
+    return embeddings
+
+# Create a dictionary to store the embeddings of each set
+embeddings = {}
+for set_name, word_set in normalized_sets.items():
+    embeddings[set_name] = get_embeddings(word_set)
+
+# Create a function to calculate the semantic similarity between sets
+def compute_similarity(set1, set2):
+    # Get the embeddings for both sets
+    embeddings1 = embeddings[set1]
+    embeddings2 = embeddings[set2]
+    
+    # Calculate cosine similarity between all pairs of words in set1 and set2
+    sim_matrix = cosine_similarity(embeddings1, embeddings2)
+    
+    return sim_matrix
+
+# Create a similarity matrix for each pair of sets
+similarity_results = {}
+for set1 in normalized_sets.keys():
+    for set2 in normalized_sets.keys():
+        if set1 != set2:
+            sim_matrix = compute_similarity(set1, set2)
+            similarity_results[(set1, set2)] = sim_matrix
+
+# Create a simple table to store the similarity values
+similarity_table = []
+
+# Populate the table with word pairs and their cosine similarity values
+for (set1, set2), sim_matrix in similarity_results.items():
+    for i, word1 in enumerate(normalized_sets[set1]):
+        for j, word2 in enumerate(normalized_sets[set2]):
+            similarity_table.append({
+                "Set 1": set1,
+                "Word 1": word1,
+                "Set 2": set2,
+                "Word 2": word2,
+                "Cosine Similarity": sim_matrix[i, j]
+            })
+
+# Convert the table to a DataFrame for better display
+similarity_df = pd.DataFrame(similarity_table)
+
+# Filter the DataFrame to keep only cosine similarities above 0.7
+similarity_df_filtered = similarity_df[similarity_df['Cosine Similarity'] > 0.7]
+
+# Create an empty table to store the words that are similar
+common_words_table = pd.DataFrame(index=sets.keys(), columns=sets.keys(), dtype=object)
+
+# Populate the table with word pairs that have similarity above 0.7
+for index, row in similarity_df_filtered.iterrows():
+    set1 = row['Set 1']
+    word1 = row['Word 1']
+    set2 = row['Set 2']
+    word2 = row['Word 2']
+    
+    # Check if the cell is empty or needs to be updated with word pairs
+    if pd.isna(common_words_table.at[set1, set2]):
+        common_words_table.at[set1, set2] = f"{word1} - {word2}"
+    else:
+        common_words_table.at[set1, set2] += f", {word1} - {word2}"
+
+# Display the table showing the common word pairs
+print(common_words_table)
+```
+
+# Similarity Counts Heatmap
+
+```{python}
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+
+plt.clf()
+
+plt.style.use('seaborn-v0_8-whitegrid')  # You can change this to any available style
+
+plt.rcParams['font.family'] = 'serif'
+
+
+df = similarity_df_filtered
+
+# Group by Set 1 and Set 2 and count the number of shared words
+count_table = df.groupby(["Set 1", "Set 2"]).size().reset_index(name="Shared Word Count")
+
+# Pivot the DataFrame to create a matrix of shared word counts
+pivot_count = count_table.pivot(index="Set 1", columns="Set 2", values="Shared Word Count").fillna(0)
+
+
+# Plot the heatmap
+plt.figure(figsize=(12, 8))
+sns.heatmap(pivot_count, annot=True, cmap="Blues", cbar_kws={'label': 'Number of Shared Words'})
+plt.title("Heatmap of Shared Words between Literature")
+plt.xlabel("Literature")
+plt.ylabel("Literature")
+plt.xticks(rotation=45, ha="right")
+plt.yticks(rotation=0)
+plt.tight_layout()
+plt.savefig('word_counts.png', dpi=300, bbox_inches='tight')
+plt.show()
+```
+
+# Table showing what words are related to words in other papers
+
+```{python}
+# Group by Set 1 and Set 2
+count_table = df.groupby(["Set 1", "Set 2"]).size().reset_index(name="Shared Word Count")
+
+# Create empty lists to store the shared words for Set 1 and Set 2
+words_set1 = []
+words_set2 = []
+
+# For each pair of sets, collect the shared words
+for _, row in count_table.iterrows():
+    set1 = row['Set 1']
+    set2 = row['Set 2']
+    
+    # Get the rows from the filtered DataFrame that match the current pair of sets
+    shared_rows = df[(df['Set 1'] == set1) & (df['Set 2'] == set2)]
+    
+    # Collect the shared words for Set 1 and Set 2
+    set1_words = sorted(shared_rows['Word 1'].unique())  # Unique words from Set 1
+    set2_words = sorted(shared_rows['Word 2'].unique())  # Unique words from Set 2
+    
+    # Join the words into a comma-separated string
+    words_set1.append(", ".join(set1_words))
+    words_set2.append(", ".join(set2_words))
+
+# Add the new columns to the count_table
+count_table['Words From Set 1'] = words_set1
+count_table['Words From Set 2'] = words_set2
+
+
+
+# Display the resulting DataFrame
+print(count_table)
+
+# Make sure that Set 1 is always smaller than Set 2 (lexicographically)
+count_table['Set Pair'] = count_table.apply(lambda row: tuple(sorted([row['Set 1'], row['Set 2']])), axis=1)
+
+# Drop duplicates based on the 'Set Pair' column
+count_table_filtered = count_table.drop_duplicates(subset=['Set Pair'])
+
+# Drop the 'Set Pair' column now that we don't need it anymore
+count_table_filtered = count_table_filtered.drop(columns=['Set Pair'])
+
+# Display the filtered result
+print(count_table_filtered)
+```
+
+
