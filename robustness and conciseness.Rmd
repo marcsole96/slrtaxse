@@ -7,6 +7,7 @@ editor_options:
 ---
 
 
+
 # Representing a tree with dictionaries
 
 https://blog.finxter.com/5-best-ways-to-construct-and-manage-a-tree-in-python/
@@ -14,7 +15,7 @@ https://builtin.com/articles/tree-python #This one is more complex
 https://bigtree.readthedocs.io/en/0.14.8/ #There is this package to create trees, but maybe it is too complex for us
 Pouly, Marc. "Estimating Text Similarity based on Semantic Concept Embeddings." arXiv preprint arXiv:2401.04422 (2024).
 
-```{python}
+```{python, eval=FALSE}
 import torch
 import einops
 import math
@@ -225,8 +226,8 @@ print(f'The conciseness of the taxonomy is: {conciseness}')
 
 
 
-# 1st paper a software cost estimation taxonomy for global software development projects
-```{python}
+## 1st paper a software cost estimation taxonomy for global software development projects
+```{python, eval=FALSE}
 new_taxonomy = {
     'Cost estimation for GSD': {
         'Cost estimation context': {
@@ -361,8 +362,8 @@ print(f'The conciseness of the taxonomy is: {conciseness}')
 
 ```
 
-# 2nd paper, A taxonomy of web effort predictors
-```{python}
+## 2nd paper, A taxonomy of web effort predictors
+```{python, eval=FALSE}
 new_taxonomy = {
     'Web Predictor': {
         'Size Metric': {
@@ -570,8 +571,8 @@ print(f'The conciseness of the taxonomy is: {conciseness}')
 ```
 
 
-# 3rd Paper A specialized global software engineering taxonomy for effort estimation
-```{python}
+## 3rd Paper A specialized global software engineering taxonomy for effort estimation
+```{python, eval=FALSE}
 
 new_taxonomy = {
     'GSE': {
@@ -627,9 +628,9 @@ conciseness= calculate_conciseness(ncat, nchar, depths_cat, depths_char)
 print(f'The conciseness of the taxonomy is: {conciseness}')
 ```
 
-# 4rth Paper: A taxonomy of Approaches and Methods for Software Effort Estimation
+## 4rth Paper: A taxonomy of Approaches and Methods for Software Effort Estimation
 
-```{python}
+```{pythonm, eval=FALSE}
 new_taxonomy = {
     'Software estimation': {
         'Basic Estimating Methods': {
@@ -679,8 +680,8 @@ conciseness= calculate_conciseness(ncat, nchar, depths_cat, depths_char)
 print(f'The conciseness of the taxonomy is: {conciseness}')
 ```
 
-# 5th Paper, Towards a Taxonomy of Hypermedia and Web Application Size Metrics. 
-```{python}
+## 5th Paper, Towards a Taxonomy of Hypermedia and Web Application Size Metrics. 
+```{python, eval=FALSE}
 
 new_taxonomy = {
   "Hypermedia and Web Application Size Metrics":{
@@ -741,9 +742,9 @@ conciseness= calculate_conciseness(ncat, nchar, depths_cat, depths_char)
 print(f'The conciseness of the taxonomy is: {conciseness}')
 ```
 
-# 6th Paper, An Effort Estimation Taxonomy for Agile Software Development
+##4 6th Paper, An Effort Estimation Taxonomy for Agile Software Development
 
-```{python}
+```{python, eval=FALSE}
 new_taxonomy = {
     'Effort Estimation in ASD': {
         'Estimation context': {
@@ -999,78 +1000,11 @@ plt.savefig('word_embeddings.png', dpi=300, bbox_inches='tight')
 plt.show()
 ```
 
-#3D PLOT
-```{python}
-import plotly.express as px
-import pandas as pd
-import numpy as np
-import torch
-from transformers import AutoModel, AutoTokenizer
-import umap.umap_ as umap
-from sklearn.preprocessing import LabelEncoder
-plt.clf()
-
-plt.style.use('seaborn-v0_8-whitegrid')  # You can change this to any available style
-
-plt.rcParams['font.family'] = 'serif'
-# Step 2: Flatten the sets into a dataframe (assuming sets is already defined)
-words = []
-labels = []
-for label, words_set in sets.items():
-    for word in words_set:
-        words.append(word)
-        labels.append(label)
-
-# Create a dataframe
-df = pd.DataFrame({'Word': words, 'Set': labels})
-
-# Step 3: Load the pre-trained model and tokenizer
-model_name = "jinaai/jina-embeddings-v3"
-if 'model' not in locals() or 'tokenizer' not in locals():
-    print("Loading model and tokenizer...")
-    model = AutoModel.from_pretrained(model_name, trust_remote_code=True)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-else:
-    print("Model and tokenizer are already loaded.")
-
-# Step 4: Get the embeddings for each word
-def get_embeddings(word):
-    inputs = tokenizer(word, return_tensors="pt", truncation=True, padding=True)
-    with torch.no_grad():
-        outputs = model(**inputs)
-    return outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
-
-embeddings = np.array([get_embeddings(word) for word in df['Word']])
-
-# Step 5: Perform 3D UMAP (with 3 components)
-umap_model = umap.UMAP(n_components=3, random_state=5)
-embeddings_3d = umap_model.fit_transform(embeddings)
-
-# Step 6: Convert string labels to numeric labels for coloring
-label_encoder = LabelEncoder()
-numeric_labels = label_encoder.fit_transform(labels)
-
-# Step 7: Create the interactive 3D plot with Plotly
-fig = px.scatter_3d(df, x=embeddings_3d[:, 0], y=embeddings_3d[:, 1], z=embeddings_3d[:, 2],
-                    color=labels, text=words,
-                    labels={'x': 'UMAP Dimension 1', 'y': 'UMAP Dimension 2', 'z': 'UMAP Dimension 3'},
-                    title="3D UMAP Visualization of Word Embeddings")
-
-# Customize the layout for better viewing
-fig.update_traces(marker=dict(size=5, opacity=0.8), selector=dict(mode='markers+text'))
-fig.update_layout(scene=dict(xaxis_title='UMAP Dimension 1',
-                             yaxis_title='UMAP Dimension 2',
-                             zaxis_title='UMAP Dimension 3'))
-plt.savefig('3d_word_embedding.png', dpi=300, bbox_inches='tight')
-
-# Show the interactive plot
-fig.show()
-```
-
 
 
 # K-means Plot
 ```{python}
+import random
 import umap.umap_ as umap
 import pandas as pd
 import numpy as np
@@ -1082,6 +1016,12 @@ from transformers import AutoTokenizer, AutoModel
 import torch
 from sklearn.metrics.pairwise import cosine_similarity
 from matplotlib.lines import Line2D  # Add this import at the top of your code
+colorstyle = "Set2"
+seed=5
+marker_styles = ['o', '^', 's', 'p', '*', 'D']
+random.seed(seed)
+np.random.seed(seed)
+torch.manual_seed(seed)
 
 plt.clf()
 
@@ -1141,7 +1081,7 @@ embeddings_2d = umap_model.fit_transform(embeddings)
 
 # Step 6: Create a color map that reflects the set labels
 unique_labels = list(df['Set'].unique())  # Get the unique set labels
-cmap = plt.cm.get_cmap('tab10', len(unique_labels))  # Create a colormap with enough colors
+cmap = plt.cm.get_cmap(colorstyle, len(unique_labels))  # Create a colormap with enough colors
 
 # Step 7: Run K-means on UMAP embeddings
 num_clusters = len(unique_labels)  # Set number of clusters to match unique labels
@@ -1176,9 +1116,24 @@ for i in range(num_clusters):
 plt.figure(figsize=(10, 7))
 color_map = {label: cmap(i) for i, label in enumerate(unique_labels)}
 
-# Plot the 2D scatter with the original labels for colors
-plt.scatter(embeddings_2d[:, 0], embeddings_2d[:, 1], 
-            c=[color_map[label] for label in df['Set']], s=50)
+# Create a list of marker styles to use for each label
+marker_styles = ['o', '^', 's', 'p', '*', 'D']  # Add more marker styles if needed
+
+# Loop through each label and plot with the corresponding marker style
+plt.figure(figsize=(10, 7))
+
+for i, label in enumerate(unique_labels):
+    # Get the data for the current label
+    label_data = df[df['Set'] == label]
+    
+    # Plot with a different marker for each label
+    plt.scatter(embeddings_2d[df['Set'] == label, 0], 
+                embeddings_2d[df['Set'] == label, 1],
+                c=[color_map[label]] * len(label_data), 
+                s=80, 
+                label=label,
+                marker=marker_styles[i % len(marker_styles)], alpha=0.6)  # Use modulo to cycle through marker styles
+
 
 # Draw convex hulls around each cluster and annotate with cluster names
 for i in range(num_clusters):
@@ -1193,32 +1148,37 @@ for i in range(num_clusters):
     # Annotate with the top 4 cluster names at the centroid location
     cluster_centroid_2d = np.mean(cluster_points, axis=0)
     # Join the top 4 words into a string with commas for cleaner display
-    cluster_name_text = ', '.join(cluster_names[i]) 
+    cluster_name_text = '\n'.join(cluster_names[i]).upper() 
     
     # Annotate with the top words at the centroid, with slightly smaller font size
     plt.text(cluster_centroid_2d[0], cluster_centroid_2d[1], cluster_name_text, 
-             fontsize=7, ha='center', color='black', fontweight='bold')
+             fontsize=8, ha='center', color='black')
 
-# Step 10: Add plot title and axis labels
+# Step 10: Custom legend to show colors and shapes for each label
 plt.title("2D UMAP Visualization of Word Embeddings with K-means Clusters")
 plt.xlabel("UMAP Dimension 1")
 plt.ylabel("UMAP Dimension 2")
 
-# Step 11: Show the plot with the updated legend
-legend_handles = [Line2D([0], [0], marker='o', color='w', 
-                         markerfacecolor=cmap(i), markersize=10) 
-                  for i, label in enumerate(unique_labels)]
-plt.legend(legend_handles, unique_labels, title="Literature", loc="center left", bbox_to_anchor=(1, 0.5))
-
+legend_elements = [Line2D([0], [0], marker=marker_styles[i % len(marker_styles)], color='w', 
+                          markerfacecolor=color_map[label], markersize=10, label=label)
+                   for i, label in enumerate(unique_labels)]
+plt.legend(
+    handles=legend_elements,
+    title="Literature",
+    loc="lower center",
+    bbox_to_anchor=(0.5, -0.2),  # Position it just below the plot
+    ncol=len(unique_labels),      # Arrange legend items in a single row
+    frameon=False                 # Optional: Remove legend box frame
+)
 # Adjust layout to ensure the legend is not clipped
 plt.tight_layout()
 
-
-# Step 10: Save the plot in high resolution
-plt.savefig('word_embeddings_kmeans.png', dpi=300, bbox_inches='tight')
+# Step 11: Save the plot in high resolution
+plt.savefig('word_embeddings_kmeans.png', dpi=600, bbox_inches='tight')
 
 # Show the plot
 plt.show()
+
 ```
 
 ```{python}
@@ -1298,6 +1258,82 @@ pivoted_df = pivoted_df.applymap(lambda x: str(x.tolist()) if isinstance(x, np.n
 # Display the pivoted DataFrame
 print(pivoted_df)
 ```
+
+
+#3D PLOT
+
+```{python}
+import plotly.express as px
+import pandas as pd
+import numpy as np
+import torch
+from transformers import AutoModel, AutoTokenizer
+import umap.umap_ as umap
+from sklearn.preprocessing import LabelEncoder
+import matplotlib.pyplot as plt
+
+plt.clf()
+
+plt.style.use('seaborn-v0_8-whitegrid')  # You can change this to any available style
+
+plt.rcParams['font.family'] = 'serif'
+# Step 2: Flatten the sets into a dataframe (assuming sets is already defined)
+words = []
+labels = []
+for label, words_set in sets.items():
+    for word in words_set:
+        words.append(word)
+        labels.append(label)
+
+# Create a dataframe
+df = pd.DataFrame({'Word': words, 'Set': labels})
+
+# Step 3: Load the pre-trained model and tokenizer
+model_name = "jinaai/jina-embeddings-v3"
+if 'model' not in locals() or 'tokenizer' not in locals():
+    print("Loading model and tokenizer...")
+    model = AutoModel.from_pretrained(model_name, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+else:
+    print("Model and tokenizer are already loaded.")
+
+# Step 4: Get the embeddings for each word
+def get_embeddings(word):
+    inputs = tokenizer(word, return_tensors="pt", truncation=True, padding=True)
+    with torch.no_grad():
+        outputs = model(**inputs)
+    return outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
+
+embeddings = np.array([get_embeddings(word) for word in df['Word']])
+
+# Step 5: Perform 3D UMAP (with 3 components)
+umap_model = umap.UMAP(n_components=3, random_state=5)
+embeddings_3d = umap_model.fit_transform(embeddings)
+
+# Step 6: Convert string labels to numeric labels for coloring
+label_encoder = LabelEncoder()
+numeric_labels = label_encoder.fit_transform(labels)
+
+# Step 7: Create the interactive 3D plot with Plotly
+fig = px.scatter_3d(df, x=embeddings_3d[:, 0], y=embeddings_3d[:, 1], z=embeddings_3d[:, 2],
+                    color=labels, text=words,
+                    labels={'x': 'UMAP Dimension 1', 'y': 'UMAP Dimension 2', 'z': 'UMAP Dimension 3'},
+                    title="3D UMAP Visualization of Word Embeddings")
+
+# Customize the layout for better viewing
+fig.update_traces(marker=dict(size=5, opacity=0.8), selector=dict(mode='markers+text'))
+fig.update_layout(scene=dict(xaxis_title='UMAP Dimension 1',
+                             yaxis_title='UMAP Dimension 2',
+                             zaxis_title='UMAP Dimension 3'))
+plt.savefig('3d_word_embedding.png', dpi=300, bbox_inches='tight')
+
+# Show the interactive plot
+fig.show()
+```
+
+
+
+
 
 # Another table showing the common words between papers, a bit harder to read
 
@@ -1398,7 +1434,7 @@ for (set1, set2), sim_matrix in similarity_results.items():
 similarity_df = pd.DataFrame(similarity_table)
 
 # Filter the DataFrame to keep only cosine similarities above 0.7
-similarity_df_filtered = similarity_df[similarity_df['Cosine Similarity'] > 0.7]
+similarity_df_filtered = similarity_df[similarity_df['Cosine Similarity'] > 0.9]
 
 # Create an empty table to store the words that are similar
 common_words_table = pd.DataFrame(index=sets.keys(), columns=sets.keys(), dtype=object)
@@ -1420,6 +1456,438 @@ for index, row in similarity_df_filtered.iterrows():
 print(common_words_table)
 ```
 
+# making a color table
+```{python}
+import pandas as pd
+from pandas.io.formats.style import Styler
+
+# Step 1: Define the color map for each set
+set_colors = {
+    "Bajta": "yellow",
+    "Britto_2016": "blue",
+    "Britto_2017": "green",
+    "Dasthi": "red",
+    "Mendes": "purple",
+    "Usman": "orange"
+}
+
+# Create the HTML content for the legend
+legend_html = "<div style='font-weight: bold; margin-bottom: 10px;'>Legend:</div>"
+for set_name, color in set_colors.items():
+    legend_html += f"<div><span style='color:{color};'>●</span> {set_name}</div>"
+
+
+# Step 2: Create the common words table (we will assume this step has already been completed and filtered)
+common_words_table = pd.DataFrame(index=sets.keys(), columns=["Words", "Relations"])
+
+# Step 3: Populate the common words table with colored word pairs
+for index, row in similarity_df_filtered.iterrows():
+    set1 = row['Set 1']
+    word1 = row['Word 1']
+    set2 = row['Set 2']
+    word2 = row['Word 2']
+    
+    # Color the words based on the sets
+    word1_colored = f'<span style="color:{set_colors[set1]}">{word1}</span>'
+    word2_colored = f'<span style="color:{set_colors[set2]}">{word2}</span>'
+    
+    # Find the row corresponding to set1
+    current_row = common_words_table.loc[set1]
+    
+    if pd.isna(current_row['Words']):
+        common_words_table.at[set1, 'Words'] = word1
+        common_words_table.at[set1, 'Relations'] = word2_colored
+    else:
+        common_words_table.at[set1, 'Words'] += f", {word1}"
+        common_words_table.at[set1, 'Relations'] += f", {word2_colored}"
+
+# Step 4: Use `map` to apply the coloring function
+def colorize_words(word):
+    """
+    Function to apply color to words using the <span> HTML tag.
+    """
+    return f"color: {word.split(':')[1]}" if isinstance(word, str) and word.startswith('<span') else ''
+
+# Step 5: Apply the styling to the DataFrame
+styled_table = common_words_table.style.applymap(colorize_words, subset=["Words", "Relations"])
+
+# Display the styled table (if using Jupyter or IPython environment)
+styled_table
+
+
+# Save the styled table to an HTML file using to_html()
+html_output = styled_table.to_html()
+html_output = legend_html + "<br>" + html_output
+
+# Specify the filename where you want to save the table
+file_path = 'colored_table.html'
+
+# Write the HTML content to the file
+with open(file_path, 'w') as file:
+    file.write(html_output)
+
+print(f"Styled table saved to {file_path}")
+
+```
+
+# Improving the color table
+
+```{python}
+import pandas as pd
+
+# Define the colormap
+viridis_colormap = cm.Set2(np.linspace(0, 1, 6))  # Get 6 distinct colors from the colormap
+
+# Create a color mapping based on the viridis colormap
+color_mapping = {
+    "Bajta": f'rgb({int(viridis_colormap[0, 0]*255)}, {int(viridis_colormap[0, 1]*255)}, {int(viridis_colormap[0, 2]*255)})',
+    "Britto_2016": f'rgb({int(viridis_colormap[1, 0]*255)}, {int(viridis_colormap[1, 1]*255)}, {int(viridis_colormap[1, 2]*255)})',
+    "Britto_2017": f'rgb({int(viridis_colormap[2, 0]*255)}, {int(viridis_colormap[2, 1]*255)}, {int(viridis_colormap[2, 2]*255)})',
+    "Dasthi": f'rgb({int(viridis_colormap[3, 0]*255)}, {int(viridis_colormap[3, 1]*255)}, {int(viridis_colormap[3, 2]*255)})',
+    "Mendes": f'rgb({int(viridis_colormap[4, 0]*255)}, {int(viridis_colormap[4, 1]*255)}, {int(viridis_colormap[4, 2]*255)})',
+    "Usman": f'rgb({int(viridis_colormap[5, 0]*255)}, {int(viridis_colormap[5, 1]*255)}, {int(viridis_colormap[5, 2]*255)})'
+}
+
+# Create an empty DataFrame to store the new table
+colored_words_table = pd.DataFrame(index=sets.keys(), columns=["Words"])
+
+# Iterate through the filtered similarity DataFrame to populate the colored table
+for index, row in similarity_df_filtered.iterrows():
+    set1 = row['Set 1']
+    word1 = row['Word 1']
+    set2 = row['Set 2']
+    word2 = row['Word 2']
+    
+    # Apply colors to words
+    colored_word1 = f'<span style="color: {color_mapping[set1]}">{word1}</span>'
+    colored_word2 = f'<span style="color: {color_mapping[set2]}">{word2}</span>'
+    
+    # For each set, append the related words in colored format
+    for set_name in sets.keys():
+        if set_name == set1:
+            current_words = colored_words_table.at[set_name, "Words"]
+            new_entry = f"{colored_word1} --> {colored_word2}"
+            if pd.isna(current_words):
+                colored_words_table.at[set_name, "Words"] = new_entry
+            else:
+                colored_words_table.at[set_name, "Words"] += ", " + new_entry
+                
+legend_html = "<div><strong>Legend:</strong><br>"
+for set_name, color in color_mapping.items():
+    legend_html += f'<span style="background-color: {color}; padding: 5px; color: white; margin-right: 10px;">{set_name}</span>'
+legend_html += "</div><br>"
+
+# Convert the DataFrame to an HTML string, preserving the inline style
+html_output = legend_html + colored_words_table.to_html(escape=False)
+
+# Specify the filename where you want to save the table
+file_path = 'colored_table.html'
+
+# Write the HTML content to the file
+with open(file_path, 'w') as file:
+    file.write(html_output)
+
+print(f"Styled table saved to {file_path}")
+
+
+```
+
+
+```{python}
+import pandas as pd
+
+# Define the color for each set
+set_colors = {
+    "Bajta": "yellow",
+    "Britto_2016": "blue",
+    "Britto_2017": "green",
+    "Dasthi": "red",
+    "Mendes": "purple",
+    "Usman": "orange"
+}
+
+# Define the word pairs between sets (example, based on your actual word pairs)
+# The format will be like (Set name, Word, Related Set, Related Word)
+word_pairs = [
+    ("Bajta", "word1", "Britto_2016", "word2"),
+    ("Bajta", "word3", "Britto_2017", "word4"),
+    ("Britto_2016", "word5", "Dasthi", "word6"),
+    ("Mendes", "word7", "Usman", "word8"),
+    # Add more word pairs here as needed
+]
+
+# Create a dictionary to hold the word pairs for each set
+word_dict = {set_name: [] for set_name in set_colors.keys()}
+
+# Fill the word dictionary with word pairs
+for set1, word1, set2, word2 in word_pairs:
+    word_dict[set1].append(f"<span style='color:{set_colors[set1]};'>{word1}</span>")
+    word_dict[set2].append(f"<span style='color:{set_colors[set2]};'>{word2}</span>")
+
+# Create a DataFrame to store the table data
+# Each row will represent a set and the column will contain the words in that set
+table_data = []
+
+# For each set, add the words it contains and their related words from other sets
+for set_name, words in word_dict.items():
+    related_words = ', '.join(words)
+    table_data.append([set_name, related_words])
+
+# Convert the data to a DataFrame
+df = pd.DataFrame(table_data, columns=["Set", "Related Words"])
+
+# Function to style the table (custom colorize applied already in the word pairs)
+def colorize_table(val):
+    return val  # No extra styling is needed as the words are already colored
+
+# Apply the style
+styled_table = df.style.applymap(colorize_table)
+
+# Add the legend at the top (HTML)
+legend_html = "<div style='font-weight: bold; margin-bottom: 10px;'>Legend:</div>"
+for set_name, color in set_colors.items():
+    legend_html += f"<div><span style='color:{color};'>●</span> {set_name}</div>"
+
+# Convert the styled table to HTML (use to_html instead of render)
+html_output = styled_table.to_html()
+
+# Combine the legend and the table
+full_html_output = legend_html + "<br>" + html_output
+
+# Specify the filename where you want to save the table
+file_path = 'colored_table_with_legend.html'
+
+# Write the combined HTML (legend + table) to the file
+with open(file_path, 'w') as file:
+    file.write(full_html_output)
+
+print(f"Styled table with legend saved to {file_path}")
+
+
+
+
+```
+
+
+
+# t sne
+
+```{python}
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+from adjustText import adjust_text
+import numpy as np
+import seaborn as sns
+
+
+# Create a dictionary to store the embeddings of each set
+embeddings = {}
+all_words = []
+word_to_set = {}
+for set_name, word_set in normalized_sets.items():
+    embeddings[set_name] = get_embeddings(word_set)
+    all_words.extend(list(word_set))
+    for word in word_set:
+        word_to_set[word] = set_name
+
+# Create an array of all embeddings
+all_embeddings = torch.cat([embeddings[set_name] for set_name in normalized_sets], dim=0)
+
+
+# Map sets to colors
+set_colors = {set_name: sns.color_palette("Set2")[i] for i, set_name in enumerate(sets.keys())}
+word_colors = [set_colors[word_to_set[word]] for word in all_words]
+
+# Apply t-SNE to reduce the dimensionality of the embeddings to 2D
+tsne = TSNE(n_components=2, random_state=5)
+reduced_embeddings = tsne.fit_transform(all_embeddings)
+
+# Initialize figure
+plt.figure(figsize=(16, 12))
+
+# Track words already labeled
+labeled_words = {}
+
+# Scatter plot with words colored by their set and label duplicates only once
+for i, word in enumerate(all_words):
+    # Color and position each word's dot
+    plt.scatter(reduced_embeddings[i, 0], reduced_embeddings[i, 1], 
+                c=[set_colors[word_to_set[word]]], s=50, alpha=0.6)
+    
+    # Check if the word has appeared before
+    if word not in labeled_words:
+        # If first occurrence, label it and choose red if shared
+        color = 'red' if all_words.count(word) > 1 else 'black'
+        text = plt.text(reduced_embeddings[i, 0], reduced_embeddings[i, 1], word.upper(), 
+                        fontsize=5, color=color)
+        labeled_words[word] = text  # Track labeled words for adjustText
+    
+# Adjust the positions of labels to avoid overlap
+adjust_text(list(labeled_words.values()), only_move={'points': 'xy'}, force_text=0.75, expand_text=(1.5, 1.5))
+
+# First legend for word sets
+handles = [plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=color, markersize=10) for color in set_colors.values()]
+labels = list(sets.keys())
+legend1 = plt.legend(handles=handles, labels=labels, title="Literature", loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=6)
+
+# Second legend for duplicate words
+duplicate_legend = plt.Line2D([0], [1], color='red', lw=2)
+legend2 = plt.legend([duplicate_legend], ["In red: duplicate words"], loc='upper center', bbox_to_anchor=(0.5, -0.12), frameon=False)
+
+# Re-add the first legend
+plt.gca().add_artist(legend1)
+
+plt.title("t-SNE Visualization of Word Embeddings")
+plt.xlabel("t-SNE Component 1")
+plt.ylabel("t-SNE Component 2")
+
+# Save the plot as an image
+plt.savefig('tsne_word_embeddings.png', dpi=600, bbox_inches='tight')
+
+# Display the plot
+plt.show()
+```
+
+```{python}
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+from adjustText import adjust_text
+import numpy as np
+import seaborn as sns
+from mpl_toolkits.mplot3d import Axes3D  # Import 3D plotting tools
+
+# Create a dictionary to store the embeddings of each set
+embeddings = {}
+all_words = []
+word_to_set = {}
+for set_name, word_set in normalized_sets.items():
+    embeddings[set_name] = get_embeddings(word_set)
+    all_words.extend(list(word_set))
+    for word in word_set:
+        word_to_set[word] = set_name
+
+# Create an array of all embeddings
+all_embeddings = torch.cat([embeddings[set_name] for set_name in normalized_sets], dim=0)
+
+# Map sets to colors
+set_colors = {set_name: sns.color_palette("Set2")[i] for i, set_name in enumerate(sets.keys())}
+word_colors = [set_colors[word_to_set[word]] for word in all_words]
+
+# Apply t-SNE to reduce the dimensionality of the embeddings to 3D
+tsne = TSNE(n_components=3, random_state=5)
+reduced_embeddings = tsne.fit_transform(all_embeddings)
+
+# Initialize figure for 3D plot
+fig = plt.figure(figsize=(16, 12))
+ax = fig.add_subplot(111, projection='3d')
+
+# Track words already labeled
+labeled_words = {}
+
+# Scatter plot with words colored by their set and label duplicates only once
+for i, word in enumerate(all_words):
+    # Color and position each word's dot in 3D
+    ax.scatter(reduced_embeddings[i, 0], reduced_embeddings[i, 1], reduced_embeddings[i, 2], 
+               c=[set_colors[word_to_set[word]]], s=50, alpha=0.6)
+    
+    # Check if the word has appeared before
+    if word not in labeled_words:
+        # If first occurrence, label it and choose red if shared
+        color = 'red' if all_words.count(word) > 1 else 'black'
+        ax.text(reduced_embeddings[i, 0], reduced_embeddings[i, 1], reduced_embeddings[i, 2], 
+                word.upper(), fontsize=5, color=color)
+        labeled_words[word] = True  # Track labeled words for avoid overlap
+    
+# Adjust the positions of labels to avoid overlap (this part doesn't adjust in 3D directly, 
+# but you could explore 3D label adjustments using other techniques like manually adjusting the positions)
+# For now, we keep the label text without adjustment in 3D (more complex adjustments can be done with other libraries).
+
+# First legend for word sets
+handles = [plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=color, markersize=10) for color in set_colors.values()]
+labels = list(sets.keys())
+legend1 = plt.legend(handles=handles, labels=labels, title="Literature", loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=6)
+
+# Second legend for duplicate words
+duplicate_legend = plt.Line2D([0], [1], color='red', lw=2)
+legend2 = plt.legend([duplicate_legend], ["In red: duplicate words"], loc='upper center', bbox_to_anchor=(0.5, -0.12), frameon=False)
+
+# Re-add the first legend
+plt.gca().add_artist(legend1)
+
+ax.set_title("t-SNE Visualization of Word Embeddings in 3D")
+ax.set_xlabel("t-SNE Component 1")
+ax.set_ylabel("t-SNE Component 2")
+ax.set_zlabel("t-SNE Component 3")
+
+# Save the plot as an image
+plt.savefig('tsne_word_embeddings_3d.png', dpi=600, bbox_inches='tight')
+
+# Display the plot
+plt.show()
+
+```
+
+
+# Same as before but UMAP
+
+```{python}
+import matplotlib.pyplot as plt
+from adjustText import adjust_text
+import numpy as np
+import umap.umap_ as umap
+
+# Apply UMAP to reduce the dimensionality of the embeddings to 2D
+umap_model = umap.UMAP(n_components=2, random_state=5)
+reduced_embeddings = umap_model.fit_transform(all_embeddings)
+
+# Initialize figure
+plt.figure(figsize=(16, 12))
+
+# Track words already labeled
+labeled_words = {}
+
+# Scatter plot with words colored by their set and label duplicates only once
+for i, word in enumerate(all_words):
+    # Color and position each word's dot
+    plt.scatter(reduced_embeddings[i, 0], reduced_embeddings[i, 1], 
+                c=[set_colors[word_to_set[word]]], s=50, alpha=0.6)
+    
+    # Check if the word has appeared before
+    if word not in labeled_words:
+        # If first occurrence, label it and choose red if shared
+        color = 'red' if all_words.count(word) > 1 else 'black'
+        text = plt.text(reduced_embeddings[i, 0], reduced_embeddings[i, 1], word.upper(), 
+                        fontsize=5, color=color)
+        labeled_words[word] = text  # Track labeled words for adjustText
+    
+# Adjust the positions of labels to avoid overlap
+adjust_text(list(labeled_words.values()), only_move={'points': 'xy'}, force_text=0.75, expand_text=(1.5, 1.5))
+
+# First legend for word sets
+handles = [plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=color, markersize=10) for color in set_colors.values()]
+labels = list(sets.keys())
+legend1 = plt.legend(handles=handles, labels=labels, title="Literature", loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=6)
+
+# Second legend for duplicate words
+duplicate_legend = plt.Line2D([0], [1], color='red', lw=2)
+legend2 = plt.legend([duplicate_legend], ["In red: duplicate words"], loc='upper center', bbox_to_anchor=(0.5, -0.12), frameon=False)
+
+# Re-add the first legend
+plt.gca().add_artist(legend1)
+
+plt.title("UMAP Visualization of Word Embeddings")
+plt.xlabel("UMAP Component 1")
+plt.ylabel("UMAP Component 2")
+
+# Save the plot as an image
+plt.savefig('umap_word_embeddings.png', dpi=600, bbox_inches='tight')
+
+# Display the plot
+plt.show()
+
+```
+
+
 # Similarity Counts Heatmap
 
 ```{python}
@@ -1428,12 +1896,10 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Clear any existing plots and set plot style
 plt.clf()
-
-plt.style.use('seaborn-v0_8-whitegrid')  # You can change this to any available style
-
+plt.style.use('seaborn-v0_8-whitegrid')
 plt.rcParams['font.family'] = 'serif'
-
 
 df = similarity_df_filtered
 
@@ -1443,11 +1909,18 @@ count_table = df.groupby(["Set 1", "Set 2"]).size().reset_index(name="Shared Wor
 # Pivot the DataFrame to create a matrix of shared word counts
 pivot_count = count_table.pivot(index="Set 1", columns="Set 2", values="Shared Word Count").fillna(0)
 
+# Reindex the pivot table to ensure symmetry in rows and columns
+pivot_count = pivot_count.reindex(index=pivot_count.columns, columns=pivot_count.columns, fill_value=0)
+
+# Mask only the upper triangle, excluding the diagonal
+#mask = np.triu(np.ones_like(pivot_count, dtype=bool), k=1)
 
 # Plot the heatmap
 plt.figure(figsize=(12, 8))
-sns.heatmap(pivot_count, annot=True, cmap="Blues", cbar_kws={'label': 'Number of Shared Words'})
-plt.title("Heatmap of Shared Words between Literature")
+#sns.heatmap(pivot_count, annot=True, mask=mask, cmap="Blues", cbar_kws={'label': 'Number of Shared Words'})
+sns.heatmap(pivot_count, annot=True, mask=mask, cmap="Blues", cbar_kws={'label': 'Number of Similar Words'})
+
+plt.title("Heatmap of Similar Words between Literature")
 plt.xlabel("Literature")
 plt.ylabel("Literature")
 plt.xticks(rotation=45, ha="right")
@@ -1455,6 +1928,63 @@ plt.yticks(rotation=0)
 plt.tight_layout()
 plt.savefig('word_counts.png', dpi=300, bbox_inches='tight')
 plt.show()
+
+```
+
+# Barplot
+
+```{python}
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Clear any existing plots and set plot style
+plt.clf()
+plt.style.use('seaborn-v0_8-whitegrid')
+plt.rcParams['font.family'] = 'serif'
+
+# Data preparation
+df = similarity_df_filtered
+
+# Group by Set 1 and Set 2 and count the number of shared words
+count_table = df.groupby(["Set 1", "Set 2"]).size().reset_index(name="Shared Word Count")
+
+# Remove redundant comparisons (keeping only Set1 < Set2)
+count_table = count_table[count_table["Set 1"] < count_table["Set 2"]]
+
+# Create all possible combinations of Set 1 and Set 2
+all_sets = pd.MultiIndex.from_product([count_table["Set 1"].unique(), count_table["Set 2"].unique()], names=["Set 1", "Set 2"])
+
+# Create a DataFrame with all combinations and zero counts
+count_table_full = pd.DataFrame(index=all_sets).reset_index()
+
+# Merge count_table_full with the original count_table to get the actual shared word counts
+count_table_full = pd.merge(count_table_full, count_table, on=["Set 1", "Set 2"], how="left").fillna(0)
+
+# Create the bar plot (dodge=True)
+plt.figure(figsize=(12, 8))
+ax = sns.barplot(x="Set 1", y="Shared Word Count", hue="Set 2", data=count_table_full, palette="Set2", width=0.8, dodge=True)
+
+# Title and labels
+plt.title("Barplot of Similar Words Between Literature (Upper 70% similarity threshold)")
+plt.xlabel("Number of Similar Words")
+plt.ylabel("Literature")
+
+# Add value labels inside each bar with the same color as the bars
+for container in ax.containers:
+    for bar in container:
+        bar_color = bar.get_facecolor()  # Get the color of the bar
+        ax.bar_label(container, label_type="edge", padding=3, fontsize=12, color=bar_color, fontweight='bold')  # Set the label color to the bar's color
+
+# Change the legend title and position it at the bottom horizontally
+plt.legend(title="Literature", loc='upper center', bbox_to_anchor=(0.5, -0.1), ncol=len(count_table['Set 2'].unique()))
+
+# Adjust layout to prevent clipping and save the plot
+plt.tight_layout()
+plt.savefig('shared_words_barplot_with_labels.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+
 ```
 
 # Table showing what words are related to words in other papers
@@ -1503,6 +2033,355 @@ count_table_filtered = count_table_filtered.drop(columns=['Set Pair'])
 
 # Display the filtered result
 print(count_table_filtered)
+```
+
+
+```{python}
+
+##############################COLORIZE TABLE############################
+
+import pandas as pd
+from openpyxl import Workbook
+from openpyxl.styles import PatternFill, Font
+
+color_palette = [
+    'ADD8E6',  # Light Blue
+    'FFFFFF',  # White
+]
+
+# Initialize tracking variables
+word1_to_color = {}
+color_index = 0
+previous_word = None
+previous_color = None
+
+# Create a new column "Marker" to hold "*" if "Word 1" equals "Word 2"
+similarity_df_filtered['Marker'] = similarity_df_filtered.apply(
+    lambda row: '*' if row['Word 1'] == row['Word 2'] else '', axis=1
+)
+
+# Function to assign colors to rows, skipping color assignment if the "Word 1" is the same as the previous row's "Word 1"
+def assign_colors(row):
+    global previous_word, previous_color, color_index
+
+    word1 = row['Word 1']
+    
+    # If the current "Word 1" is the same as the previous "Word 1", reuse the color
+    if word1 == previous_word:
+        color = previous_color
+    else:
+        # Otherwise, assign the next color and update tracking variables
+        color = color_palette[color_index % len(color_palette)]
+        previous_color = color
+        previous_word = word1
+        color_index += 1
+    
+    # Return a list of styles for all columns except for "Marker" (bold)
+    return [f'background-color: {color}'] * (len(row) - 1) + ['font-weight: bold; color: black;']
+
+# Apply the function to style the DataFrame
+styled_similarity_df = similarity_df_filtered.style.apply(assign_colors, axis=1)
+
+# Display the styled DataFrame
+styled_similarity_df
+styled_similarity_df.to_html('similarity_table.html')
+
+######################## EXCEL ###################
+import pandas as pd
+from openpyxl import Workbook
+from openpyxl.styles import PatternFill
+
+
+# Initialize the Excel workbook and sheet
+wb = Workbook()
+ws = wb.active
+ws.title = "Similarity Results"
+
+# Write the headers to the Excel sheet
+headers = list(similarity_df_filtered.columns)
+ws.append(headers)
+
+# Define the color palette (matching Excel-friendly hex colors)
+excel_palette = [
+    'FFFFFF',  # Soft Orange
+    'cfebff',  # Soft Blue
+]
+
+# Initialize tracking variables for coloring
+word1_to_color = {}
+color_index = 0
+previous_word = None
+previous_color = None
+
+# Function to get the next color for a word pair, reusing previous color if the word matches
+def get_color(word1):
+    global previous_word, previous_color, color_index
+    if word1 == previous_word:
+        color = previous_color
+    else:
+        color = excel_palette[color_index % len(excel_palette)]
+        previous_word = word1
+        previous_color = color
+        color_index += 1
+    return color
+
+# Populate the Excel sheet with data and apply conditional coloring
+for _, row in similarity_df_filtered.iterrows():
+    # Determine the color for this row
+    color_hex = get_color(row['Word 1'])
+    fill = PatternFill(start_color=color_hex, end_color=color_hex, fill_type="solid")
+    
+    # Create a list to hold row values, including the new "Marker" column
+    row_values = list(row)
+
+    # Add an asterisk "*" in the "Marker" column if Word 1 == Word 2
+    marker = "*" if row['Word 1'] == row['Word 2'] else ""
+    row_values.append(marker)  # Append the marker to the row values
+
+    # Write row to Excel and apply styling
+    ws.append(row_values)
+    for col_idx in range(1, len(row_values)):
+        cell = ws.cell(row=ws.max_row, column=col_idx)
+        cell.fill = fill  # Apply the color fill to each cell in the row
+
+    # Apply bold font to the marker cell if it contains "*"
+    marker_cell = ws.cell(row=ws.max_row, column=len(row_values))
+    if marker_cell.value == "*":
+        marker_cell.font = Font(bold=True)
+
+# Save the workbook
+wb.save("similarity_results_colored.xlsx")
+```
+
+
+#Trying to collapse the excel
+
+```{python}
+import pandas as pd
+from openpyxl import Workbook
+from openpyxl.styles import PatternFill, Font
+from openpyxl.utils import get_column_letter
+
+# Initialize Excel workbook and worksheet
+wb = Workbook()
+ws = wb.active
+ws.title = "Collapsed Similarity Results"
+
+# Create a collapsed column header
+headers = ["Set Pair", "Word Pair", "Cosine Similarity", "Marker"]
+ws.append(headers)
+
+# Define color palette for coloring words
+excel_palette = [
+    'ADD8E6',  # Light Blue
+    'FFFFFF',  # Sky Blue
+]
+
+# Initialize tracking for word color and color index
+word1_to_color = {}
+color_index = 0
+previous_word = None
+previous_color = None
+
+# Function to get the next color for a word, preventing consecutive repetitions
+def get_color(word1):
+    global previous_word, previous_color, color_index
+    if word1 == previous_word:
+        color = previous_color
+    else:
+        color = excel_palette[color_index % len(excel_palette)]
+        previous_word = word1
+        previous_color = color
+        color_index += 1
+    return color
+
+# Populate the sheet with merged "Set Pair" and "Word Pair" columns
+for _, row in similarity_df_filtered.iterrows():
+    set_pair = f"{row['Set 1']} - {row['Set 2']}"
+    word_pair = f"{row['Word 1']} - {row['Word 2']}"
+    cosine_similarity = row['Cosine Similarity']
+    marker = "*" if row['Word 1'] == row['Word 2'] else ""
+
+    # Append collapsed data to Excel sheet
+    ws.append([set_pair, word_pair, cosine_similarity, marker])
+
+    # Retrieve the current row in Excel (last row)
+    current_row = ws.max_row
+
+    # Apply color fill to "Word Pair" cell, splitting the color between the words
+    word1_color = get_color(row['Word 1'])
+    word2_color = get_color(row['Word 2'])
+
+    # Use PatternFill to set color on individual words in the "Word Pair" cell
+    cell = ws.cell(row=current_row, column=2)
+    cell_value = cell.value
+
+    # Apply color fills
+    ws.cell(row=current_row, column=2).fill = PatternFill(
+        start_color=word1_color, end_color=word1_color, fill_type="solid"
+    )
+    # Format each word with its designated color
+    # Since openpyxl doesn't support in-cell color splitting directly,
+    # we’d visually inspect it or use external software for more advanced formatting.
+
+    # Apply bold font to the "Marker" column if it has "*"
+    marker_cell = ws.cell(row=current_row, column=4)
+    if marker:
+        marker_cell.font = Font(bold=True)
+
+# Adjust column width for readability
+for col in range(1, ws.max_column + 1):
+    ws.column_dimensions[get_column_letter(col)].width = 20
+
+# Save the workbook
+wb.save("collapsed_similarity_results_colored.xlsx")
+
+```
+
+# Trying to collapse the excel even more
+```{python}
+import pandas as pd
+from openpyxl import Workbook
+from openpyxl.styles import Font
+from openpyxl.utils import get_column_letter
+
+# Create a workbook and a worksheet
+wb = Workbook()
+ws = wb.active
+ws.title = "Collapsed Similarity Results"
+
+# Define the headers for the new table
+headers = ["Set Pair", "Word Pair"]
+ws.append(headers)
+
+# Define color palette for coloring words
+excel_palette = [
+    'FF6384',  # Light Red
+    '36A2EB',  # Light Blue
+    'FFCE56',  # Light Yellow
+    '4BC0C0',  # Light Green
+    '9966FF',  # Light Purple
+    'FF9F40'   # Light Orange
+]
+
+# Initialize the color index and word-to-color mapping
+color_index = 0
+word_colors = {}
+
+# Function to assign a color to a word, and avoid repeating colors for the same word in consecutive rows
+def get_word_color(word):
+    global color_index
+    if word not in word_colors:
+        word_colors[word] = excel_palette[color_index % len(excel_palette)]
+        color_index += 1
+    return word_colors[word]
+
+# Group the words by set pair and track the font color for each word
+set_pairs_dict = {}
+
+# Populate the set_pairs_dict with the relevant data
+for _, row in similarity_df_filtered.iterrows():
+    set_pair = f"{row['Set 1']} - {row['Set 2']}"
+    word_pair = f"{row['Word 1']} - {row['Word 2']}"
+    
+    # Group words by set pairs
+    if set_pair not in set_pairs_dict:
+        set_pairs_dict[set_pair] = []
+    
+    set_pairs_dict[set_pair].append((row['Word 1'], row['Word 2'], row['Cosine Similarity']))
+
+# Function to apply colors to words in the final merged table
+def apply_word_colors(word_pair_str, word_colors):
+    colored_str = []
+    for word in word_pair_str.split(" - "):
+        color = word_colors.get(word, '000000')  # Default to black if no color is found
+        word_font = Font(color=color)
+        colored_str.append(f"{word} ({color})")  # Track color alongside the word
+    return " - ".join(colored_str)
+
+# Now we will merge words and apply colors to the font
+for set_pair, word_pairs in set_pairs_dict.items():
+    combined_words = []
+    for word1, word2, _ in word_pairs:
+        color_word1 = get_word_color(word1)
+        color_word2 = get_word_color(word2)
+
+        # Append words to the combined list, ensuring no duplicates
+        combined_words.extend([word1, word2])
+
+    # Remove duplicates and join them into one string for the word pair column
+    combined_words = sorted(set(combined_words), key=lambda x: combined_words.index(x))
+    word_pair_str = " - ".join(combined_words)
+
+    # Add the set pair and word pair to the Excel sheet
+    current_row = ws.max_row + 1
+    ws.append([set_pair, word_pair_str])
+
+    # Apply font color for each word in the final word pair
+    current_cell = ws.cell(row=current_row, column=2)
+    current_cell.value = word_pair_str
+
+    for word in word_pair_str.split(" - "):
+        # Set font color for each word (as per the color assigned previously)
+        color = word_colors.get(word, '000000')
+
+        # Check if the word is identical and bold it
+        is_bold = False
+        for word1, word2, _ in word_pairs:
+            if word1 == word2:
+                is_bold = True
+
+        # Apply the font color and bold if necessary
+        current_cell.font = Font(color=color, bold=is_bold)
+
+# Save the workbook to a file
+wb.save("colored_word_pairs.xlsx")
+
+print("Excel file with colored words and bold identical words has been created!")
+
+
+
+```
+
+
+```{python}
+# Initialize tracking variables
+word1_to_color = {}
+color_index = 0
+previous_word = None
+previous_color = None
+
+# Create a new column "Marker" to hold "*" if "Word 1" equals "Word 2"
+similarity_df_filtered['Marker'] = similarity_df_filtered.apply(
+    lambda row: '*' if row['Word 1'] == row['Word 2'] else '', axis=1
+)
+
+# Function to assign colors to rows, skipping color assignment if the "Word 1" is the same as the previous row's "Word 1"
+def assign_colors(row):
+    global previous_word, previous_color, color_index
+
+    word1 = row['Word 1']
+    
+    # If the current "Word 1" is the same as the previous "Word 1", reuse the color
+    if word1 == previous_word:
+        color = previous_color
+    else:
+        # Otherwise, assign the next color and update tracking variables
+        color = color_palette[color_index % len(color_palette)]
+        previous_color = color
+        previous_word = word1
+        color_index += 1
+    
+    # Return a list of styles for all columns except for "Marker" (bold)
+    return [f'background-color: {color}'] * (len(row) - 1) + ['font-weight: bold; color: black;']
+
+# Apply the function to style the DataFrame
+styled_similarity_df = similarity_df_filtered.style.apply(assign_colors, axis=1)
+
+# Display the styled DataFrame
+styled_similarity_df
+styled_similarity_df.to_html('similarity_table.html')
+
 ```
 
 
