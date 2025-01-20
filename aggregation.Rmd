@@ -1,0 +1,689 @@
+---
+title: "aggregation"
+output: html_document
+date: "2025-01-06"
+editor_options: 
+  chunk_output_type: console
+---
+
+# First loading all the taxonomies
+
+## 1st paper a software cost estimation taxonomy for global software development projects
+```{python, eval=FALSE}
+elbajta = {
+    'Cost estimation for GSD': {
+        'Cost estimation context': {
+            'Planning': {
+                "Conceptualization": "Conceptualization",
+                "Feasibility study": "Feasibility study",
+                "Preliminary planning": "Preliminary planning",
+                "Detail Planning": "Detail planning",
+                "Execution": "Execution",
+                "Commissioning": "Commissioning"
+            },
+            'Project activities': {
+                "System investigation": "System investigation",
+                "Analysis": "Analysis",
+                "Design": "Design",
+                "Implementation": "Implementation",
+                "Testing": "Testing",
+                "Maintenance": "Maintenance",
+                "Other": "Other"
+            },
+            'Project domain': {
+                "SE": "Systems Engineering",
+                "Research & Dev": {
+                    "Telecommunication": "Telecommunication"
+                },
+                "Finance": "Finance",
+                "Healthcare": "Healthcare",
+                "Other": "Other"
+            },
+            'Project setting': {
+                "Close onshore": "Close onshore",
+                "Distant onshore": "Distant onshore",
+                "Near offshore": "Near offshore",
+                "Far offshore": "Far offshore"
+            },
+            'Planning approaches': {
+                "Constructive Cost Model": "Constructive Cost Model",
+                "Capability Maturity Model Integration": "Capability Maturity Model Integration",
+                "Agile": "Agile",
+                "Delphi": "Delphi",
+                "GA": "Genetic Algorithms",
+                "CBR": "Case-Based Reasoning",
+                "Fuzzy similar": "Fuzzy similar",
+                "Other": "Other"
+            },
+            'Number of sites': {
+                "Value": "Value"
+            },
+            'Team size': {
+                "No of team members": "Number of team members"
+            }
+        },
+        'Estimation technique': {
+            'Estimation technique': {
+                "Expert judgment": "Expert judgment",
+                "Machine learning": "Machine learning",
+                "Non-machine learning": "Non-machine learning"
+            },
+            'Use technique': {
+                "Individual": "Individual",
+                "Group-based estimation": "Group-based estimation"
+            }
+        },
+        'Cost estimate': {
+            'Estimated cost': {
+                "Estimate value": "Estimated cost value"
+            },
+            'Actual cost': {
+                "Value": "Actual cost value"
+            },
+            'Estimation dimension': {
+                "Effort hours": "Effort hours",
+                "Staff/cost": "Staff/cost",
+                "Hardware": "Hardware",
+                "Risk": "Risk",
+                "Portfolio": "Portfolio"
+            },
+            'Accuracy measure': {
+                "Baseline comparison": "Baseline comparison",
+                "Variation reduction": "Variation reduction",
+                "Sensitivity analysis": "Sensitivity analysis"
+            }
+        },
+        'Cost estimators': {
+            'Product size': {
+                "Size report": "Size report",
+                "Statistics analysis": "Statistics analysis"
+            },
+            'Team experience': {
+                "Considered": "Considered experience",
+                "Not considered": "Not considered experience"
+            },
+            'Team structure': {
+                "Considered": "Considered structure",
+                "Not Considered": "Not considered structure"
+            },
+            'Product requirement': {
+                "Performance": "Performance",
+                "Security": "Security",
+                "Availability": "Availability",
+                "Reliability": "Reliability",
+                "Maintainability": "Maintainability",
+                "Other": "Other requirement"
+            },
+            'Distributed teams distances': {
+                "Geographical distance": "Geographical distance",
+                "Temporal distance": "Temporal distance",
+                "Socio-cultural distance": "Socio-cultural distance"
+            }
+        }
+    }
+}
+```
+
+## 2nd paper, A taxonomy of web effort predictors
+```{python, eval=FALSE}
+britto2017 = {
+    'Web Predictor': {
+        'Size Metric': {
+            'Length': {
+                        'Web page count': 'Web page count',
+                        'Media count': 'Media count',
+                        'New media count': 'New media count',
+                        'New Web page count': 'New Web page count',
+                        'Link count': 'Link count',
+                        'Program count': 'Program count',
+                        'Reused component count': 'Reused component count',
+                        'Lines of code': 'Lines of code',
+                        'Reused program count': 'Reused program count',
+                        'Reused media count': 'Reused media count',
+                        'Web page allocation': 'Web page allocation',
+                        'Reused lines of code': 'Reused lines of code',
+                        'Media allocation': 'Media allocation',
+                        'Reused media allocation': 'Reused media allocation',
+                        'Entity count': 'Entity count',
+                        'Attribute count': 'Attribute count',
+                        'Component count': 'Component count',
+                        'Statement count': 'Statement count',
+                        'Node count': 'Node count',
+                        'Collection slot size': 'Collection slot size',
+                        'Component granularity level': 'Component granularity level',
+                        'Slot granularity level': 'Slot granularity level',
+                        'Model node size': 'Model node size',
+                        'Cluster node size': 'Cluster node size',
+                        'Node slot size': 'Node slot size',
+                        'Publishing model unit count': 'Publishing model unit count',
+                        'Model slot size': 'Model slot size',
+                        'Association slot size': 'Association slot size',
+                        'Client script count': 'Client script count',
+                        'Server script count': 'Server script count',
+                        'Information slot count': 'Information slot count',
+                        'Association center slot count': 'Association center slot count',
+                        'Collection center slot count': 'Collection center slot count',
+                        'Component slot count': 'Component slot count',
+                        'Semantic association count': 'Semantic association count',
+                        'Segment count': 'Segment count',
+                        'Slot count': 'Slot count',
+                        'Cluster slot count': 'Cluster slot count',
+                        'Cluster count': 'Cluster count',
+                        'Publishing unit count': 'Publishing unit count',
+                        'Section count': 'Section count',
+                        'Inner/sub concern count': 'Inner/sub concern count',
+                        'Indifferent concern count': 'Indifferent concern count',
+                        'Module point cut count': 'Module point cut count',
+                        'Module count': 'Module count',
+                        'Module attribute count': 'Module attribute count',
+                        'Operation count': 'Operation count',
+                        'Comment count': 'Comment count',
+                        'Reused comment count': 'Reused comment count',
+                        'Media duration': 'Media duration',
+                        'Diffusion cut count': 'Diffusion cut count',
+                        'Concern module count': 'Concern module count',
+                        'Concern operation count': 'Concern operation count',
+                        'Anchor count': 'Anchor count'},
+            'Functionality': {
+                        'High feature count': 'High feature count',
+                        'Low feature count': 'Low feature count',
+                        'Reused high feature count': 'Reused high feature count',
+                        'Reused low feature count': 'Reused low feature count',
+                        'Web objects': 'Web objects',
+                        'Common Software Measurement International Consortium': 'Common Software Measurement International Consortium',
+                        'International Function Point Users Group': 'International Function Point Users Group',
+                        'Object-Oriented Heuristic Function Points': 'Object-Oriented Heuristic Function Points',
+                        'Object-Oriented Function Points': 'Object-Oriented Function Points',
+                        'Use case count': 'Use case count',
+                        'Feature count': 'Feature count',
+                        'Data Web points': 'Data Web points'},
+            
+            'Object-oriented': {
+                        'Cohesion': 'Cohesion',
+                        'Class coupling': 'Class coupling',
+                        'Concern coupling': 'Concern coupling'}, 
+
+            'Complexity': {
+                        'Connectivity density': 'Connectivity density',
+                        'Cyclomatic complexity': 'Cyclomatic complexity',
+                        'Model collection complexity': 'Model collection complexity',
+                        'Model association complexity': 'Model association complexity',
+                        'Model link complexity': 'Model link complexity',
+                        'Page complexity': 'Page complexity',
+                        'Component complexity': 'Component complexity',
+                        'Total complexity': 'Total complexity',
+                        'Adaptation complexity': 'Adaptation complexity',
+                        'New complexity': 'New complexity',
+                        'Data usage complexity': 'Data usage complexity',
+                        'Data flow complexity': 'Data flow complexity',
+                        'Cohesion complexity': 'Cohesion complexity',
+                        'Interface complexity': 'Interface complexity',
+                        'Control flow complexity': 'Control flow complexity',
+                        'Class complexity': 'Class complexity',
+                        'Layout complexity': 'Layout complexity',
+                        'Input complexity': 'Input complexity',
+                        'Output complexity': 'Output complexity'} 
+                        },
+        'Cost Driver': {
+          'Product':{
+            'Type': 'Type',
+            'Stratum': 'Stratum',
+            'Compactness': 'Compactness',
+            'Structure': 'Structure',
+            'Architecture': 'Architecture',
+            'Integration with legacy systems': 'Integration with legacy systems',
+            'Concurrency level': 'Concurrency level',
+            'Processing requirements': 'Processing requirements',
+            'Database size': 'Database size',
+            'Requirements volatility level': 'Requirements volatility level',
+            'Requirements novelty level': 'Requirements novelty level',
+            'Reliability level': 'Reliability level',
+            'Maintainability level': 'Maintainability level',
+            'Time efficiency level': 'Time efficiency level',
+            'Memory efficiency level': 'Memory efficiency level',
+            'Portability level': 'Portability level',
+            'Scalability level': 'Scalability level',
+            'Quality level': 'Quality level',
+            'Usability level': 'Usability level',
+            'Readability level': 'Readability level',
+            'Security level': 'Security level',
+            'Installability level': 'Installability level',
+            'Modularity level': 'Modularity level',
+            'Flexibility level': 'Flexibility level',
+            'Testability level': 'Testability level',
+            'Accessibility level': 'Accessibility level',
+            'Trainability level': 'Trainability level',
+            'Innovation level': 'Innovation level',
+            'Technical factors': 'Technical factors',
+            'Storage constraint': 'Storage constraint',
+            'Reusability level': 'Reusability level',
+            'Robustness level': 'Robustness level',
+            'Design volatility': 'Design volatility',
+            'Experience level': 'Experience level',
+            'Requirements clarity level': 'Requirements clarity level'},
+        'Client': {
+            'Availability level': 'Availability level',
+            'IT literacy': 'IT literacy',
+            'Mapped workflows': 'Mapped workflows',
+            'Personality': 'Personality'},
+            
+        'Development Company': {
+            'SPI program': 'SPI program',
+            'Metrics’ program': 'Metrics’ program',
+            'Number of projects in parallel': 'Number of projects in parallel',
+            'Software reuse': 'Software reuse'},
+        'Project': {
+            'Documentation level': 'Documentation level',
+            'Number of programming languages': 'Number of programming languages',
+            'Type': 'Type',
+            'Process efficiency level': 'Process efficiency level',
+            'Project management level': 'Project management level',
+            'Infrastructure': 'Infrastructure',
+            'Development restriction': 'Development restriction',
+            'Time restriction': 'Time restriction',
+            'Risk level': 'Risk level',
+            'Rapid app development': 'Rapid app development',
+            'Operational mode': 'Operational mode',
+            'Resource level': 'Resource level',
+            'Lessons learned repository': 'Lessons learned repository'},            
+        'Team': {
+            'Domain experience level': 'Domain experience level',
+            'Team size': 'Team size',
+            'Deployment platform experience level': 'Deployment platform experience level',
+            'Team capability': 'Team capability',
+            'Programming language experience level': 'Programming language experience level',
+            'Tool experience level': 'Tool experience level',
+            'Communication level': 'Communication level',
+            'Software development experience': 'Software development experience',
+            'Work Team level': 'Work Team level',
+            'Stability level': 'Stability level',
+            'Motivation level': 'Motivation level',
+            'Focus factor': 'Focus factor',
+            'Tool experience level': 'Tool experience level',
+            'OO experience level': 'OO experience level',
+            'In-house experience': 'In-house experience'},
+        'Technology': {
+            'Authoring tool type': 'Authoring tool type',
+            'Productivity level': 'Productivity level',
+            'Novelty level': 'Novelty level',
+            'Platform volatility level': 'Platform volatility level',
+            'Difficulty level': 'Difficulty level',
+            'Platform support level': 'Platform support level'}}
+          
+}
+}
+```
+
+## 3rd Paper A specialized global software engineering taxonomy for effort estimation
+```{python, eval=FALSE}
+
+britto2016 = {
+    'GSE': {
+        'Project': {
+            'Site': {
+                "Location": "Location",
+                "Legal Entity": "Legal Entity",
+                "Geographic Distance": "Geographic Distance",
+                "Temporal Distance": "Temporal Distance",
+                "Estimation stage": {
+                    "Early": "Early",
+                    "Early & Late": "Early & Late",
+                    "Late": "Late"
+                },
+                "Estimation process role": {
+                    "Estimator": "Estimator",
+                    "Estimator & Provider": "Estimator & Provider",
+                    "Provider": "Provider"
+                }
+            },
+            'Relationship': {
+                "Location": "Location",
+                "Legal Entity": "Legal Entity",
+                "Geographic Distance": "Geographic Distance",
+                "Temporal Distance": "Temporal Distance",
+                "Estimation process architectural model": {
+                    "Centralized": "Centralized",
+                    "Distributed": "Distributed",
+                    "Semi-distributed": "Semi-distributed"
+                }
+            }
+        }
+    }
+}
+```
+
+## 4rth Paper: A taxonomy of Approaches and Methods for Software Effort Estimation
+```{python}
+dashti = {
+    'Software estimation': {
+        'Basic Estimating Methods': {
+            "Algorithmic": {
+                "Constructive Cost Model": "Constructive Cost Model",
+                "Software Life Cycle Management": "Software Life Cycle Management",
+                "Software Evaluation and Estimation for Risk": "Software Evaluation and Estimation for Risk"
+            },
+            "Non-Algorithmic": {
+                "Expert Judgment": "Expert Judgment",  # Corrected spelling
+                "Analogy-Based": "Analogy-Based"
+            }
+        },
+        'Combined Estimating Methods': {
+            "Basic-Combination": "Basic-Combination",
+            "Legal Entity": "Legal Entity",
+            "Estimation process architectural model": {
+                "Fuzzy Logic": "Fuzzy Logic",
+                "Artificial Neural Networks": "Artificial Neural Networks",
+                "Computational Intelligence": {  # Corrected spelling
+                    "swarm": "swarm",
+                    "evolutionary": ""
+                }
+            },
+            "AI-Combined hybrid": "AI-Combined hybrid"
+        }
+    }
+}
+```
+
+## 5th Paper, Towards a Taxonomy of Hypermedia and Web Application Size Metrics. 
+```{python, eval=FALSE}
+
+mendes = {
+  "Hypermedia and Web Application Size Metrics":{
+    "Motivation":"Motivation",
+    "Harvesting time":{
+      "Early size metric":"Early size metric",
+      "Late size metric":"Late size metric"},
+    "Metric foundation":{
+      "Problem-oriented metric":"Problem-oriented metric",
+      "Solution-oriented metric":"Solution-oriented metric"},
+    "Class":{
+      "Length":"Length",
+      "Functionality":"Functionality",
+      "Complexity":"Complexity"},
+    "Entity":{
+      "Web hypermedia application":"Web hypermedia application",
+      "Web software application":"Web software application",
+      "Web application":"Web application",
+      "Media":"Media",
+      "Program/Script":"Program/Sript"},
+    "Measurement Scale":{
+      "Nominal":"Nominal",
+      "Ordinal":"Ordinal",
+      "Interval":"Interval",
+      "Ratio":"Ratio",
+      "Absolute":"Absolute"},
+    "Computation":{
+      "Direct":"Direct",
+      "Indirect":"Indirect"},
+    "Validation":{
+      "Validated Empirically":"Validated Empirically",
+      "Validated Theoretically":"Validated Theoretically",
+      "Both":"Both",
+      "None":"None"},
+    "Model dependency":{
+      "Specific":"Specific",
+      "Nonspecific":"Nonspecific"}
+}
+}
+```
+
+## 6th Paper, An Effort Estimation Taxonomy for Agile Software Development
+```{python, eval=FALSE}
+usman = {
+    'Effort Estimation in ASD': {
+        'Estimation context': {
+            "Planning level": {
+                "Release": "Release",
+                "Sprint": "Sprint",
+                "Daily": "Daily",
+                "Bidding": "Bidding"
+            },
+            "Estimated activities": {
+                "Analysis": "Analysis",
+                "Design": "Design",
+                "Implementation": "Implementation",
+                "Testing": "Testing",
+                "Maintenance": "Maintenance",
+                "All": "All"
+            },
+            "Agile methods": {
+                "Extreme Programming": "Extreme Programming",
+                "Scrum": "Scrum",
+                "Customized Extreme Programming": "Customized Extreme Programming",
+                "Customized Scrum": "Customized Scrum",
+                "Dynamic Systems Development Method": "Dynamic Systems Development Method",
+                "Crystal": "Crystal",
+                "Feature-Driven Development": "Feature-Driven Development",
+                "Kanban": "Kanban"
+            },
+            "Project domain": {
+                "Communications industry": "Communications industry",
+                "Transportation": "Transportation",
+                "Financial": "Financial",
+                "Education": "Education",
+                "Health": "Health",
+                "Retail/Wholesale": "Retail/Wholesale",
+                "Manufacturing": "Manufacturing",
+                "Government/Military": "Government/Military",
+                "Other": "Other"
+            },
+            "Project setting": {
+                "Co-located": "Co-located",
+                "Distributed: Close Onshore": "Distributed: Close Onshore",
+                "Distributed: Distant Onshore": "Distributed: Distant Onshore",
+                "Distributed: Near Offshore": "Distributed: Near Offshore",
+                "Distributed: Far Offshore": "Distributed: Far Offshore"
+            },
+            "Estimation entity": {
+                "User story": "User story",
+                "Task": "Task",
+                "Use case": "Use case",
+                "Other": "Other"
+            },
+            "Number of entities estimated": {
+                "Value": "Value"
+            },
+            "Team size": {
+                "No. of team members": "No. of team members"
+            }
+        },
+        'Estimation technique': {
+            "Estimation Techniques": {
+                "Planning Poker": "Planning Poker",
+                "Expert Judgement": "Expert Judgement",
+                "Analogy": "Analogy",
+                "Use case points method": "Use case points method",
+                "Other": "Other"
+            },
+            "Type": {
+                "Single": "Single",
+                "Group": "Group"
+            }
+        },
+        'Effort predictors': {
+            "Size": {
+                "Story points": "Story points",
+                "User case points": "User case points",
+                "Function points": "Function points",
+                "Other": "Other",
+                "Not used": "Not used",
+                "Considered without any metric": "Considered without any metric"
+            },
+            "Team's prior experience": {
+                "Considered": "Considered",
+                "Not Considered": "Not Considered"
+            },
+            "Team's skill level": {
+                "Considered": "Considered",
+                "Not Considered": "Not Considered"
+            },
+            "Non functional requirements": {
+                "Performance": "Performance",
+                "Security": "Security",
+                "Availability": "Availability",
+                "Reliability": "Reliability",
+                "Maintainability": "Maintainability",
+                "Other": "Other",  # Changed period to comma
+                "Not considered": "Not considered"
+            },
+            "Distributed teams' issues": {
+                "Considered": "Considered",
+                "Not Considered": "Not Considered",
+                "Not applicable": "Not applicable"
+            },
+            "Customer Communication": {
+                "Considered": "Considered",
+                "Not Considered": "Not Considered"
+            }
+        },
+        'Effort estimate': {
+            "Estimated effort": {
+                "Estimate value(s)": "Estimate value(s)"
+            },
+            "Actual effort": {
+                "Value": "Value"
+            },
+            "Type": {
+                "Point": "Point",
+                "Three point": "Three point",
+                "Distribution": "Distribution",
+                "Other": "Other"
+            },
+            "Unit": {
+                "House/days": "House/days",
+                "Pair days": "Pair/days",
+                "Ideal hours": "Ideal hours",
+                "Other": "Other"
+            },
+            "Accuracy Level": {
+                "Value": "Value"
+            },
+            "Accuracy measure": {
+                "Mean Magnitude of Relative Error": "Mean Magnitude of Relative Error",
+                "Median Magnitude of Relative Error": "Median Magnitude of Relative Error",
+                "Bias of Relative Error": "Bias of Relative Error",
+                "Other": "Other",
+                "Not used": "Not used"
+            }
+        }
+    }
+}
+```
+
+# Automating aggregation?
+```{python}
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder
+import matplotlib.pyplot as plt
+from transformers import AutoTokenizer, AutoModel
+import torch
+import matplotlib
+
+
+model_name = "jinaai/jina-embeddings-v3"
+if 'model' not in locals() or 'tokenizer' not in locals():
+    print("Loading model and tokenizer...")
+    model = AutoModel.from_pretrained(model_name, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+else:
+    print("Model and tokenizer are already loaded.")
+    
+from collections import defaultdict
+from sklearn.metrics.pairwise import cosine_similarity
+from sentence_transformers import SentenceTransformer
+
+# Function to calculate similarity between terms
+def calculate_similarity(term1, term2):
+    embedding1 = model.encode(term1)
+    embedding2 = model.encode(term2)
+    return cosine_similarity([embedding1], [embedding2])[0][0]
+  
+```
+
+```{python}
+
+# Recursive merge function
+def merge_taxonomies(tax1, tax2, threshold=0.8):
+    merged = defaultdict(dict)
+    for key1, sub1 in tax1.items():
+        best_match = None
+        best_score = 0
+        for key2, sub2 in tax2.items():
+            score = calculate_similarity(key1, key2)
+            if score > best_score:
+                best_score = score
+                best_match = key2
+        
+        if best_score >= threshold:
+            # Merge recursively if a match is found
+            merged[key1] = merge_taxonomies(sub1, tax2[best_match], threshold)
+        else:
+            # No match found, keep as is
+            merged[key1] = sub1
+    
+    # Include nodes from tax2 not matched
+    for key2, sub2 in tax2.items():
+        if key2 not in merged:
+            merged[key2] = sub2
+    
+    return merged
+  
+```
+
+```{python}
+# Initialize taxonomies
+master_taxonomy = elbajta['Cost estimation for GSD']  # Start with the first taxonomy
+next_taxonomy = britto2017['Web Predictor']
+
+# Merge
+aggregated_taxonomy = merge_taxonomies(master_taxonomy, next_taxonomy)
+
+# Repeat for additional taxonomies
+```
+
+# Visualize the aggregation
+```{python}
+import networkx as nx
+import matplotlib.pyplot as plt
+
+# Function to create a directed graph from a taxonomy dictionary
+def create_taxonomy_graph(taxonomy):
+    graph = nx.DiGraph()
+    for parent, children in taxonomy.items():
+        for child in children:
+            graph.add_edge(parent, child)
+    return graph
+  
+  
+# Function to visualize a taxonomy graph
+def visualize_taxonomy(graph, title):
+    plt.figure(figsize=(12, 8))
+    pos = nx.spring_layout(graph, seed=42)
+    nx.draw(
+        graph,
+        pos,
+        with_labels=True,
+        node_color="lightblue",
+        node_size=3000,
+        font_size=10,
+        font_weight="bold",
+        edge_color="gray",
+    )
+    plt.title(title, fontsize=14, fontweight="bold")
+    plt.show()
+    
+# Create and visualize individual taxonomies
+elbajta_graph = create_taxonomy_graph(elbajta)
+visualize_taxonomy(elbajta_graph, "Elbajta Taxonomy")
+
+britto_graph = create_taxonomy_graph(britto2017)
+visualize_taxonomy(britto_graph, "Britto2017 Taxonomy")
+
+# Create and visualize merged taxonomy
+aggregated_taxonomy = create_taxonomy_graph(aggregated_taxonomy)
+visualize_taxonomy(aggregated_taxonomy, "aggregated_taxonomy")
+
+```
+
+
