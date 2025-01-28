@@ -1,0 +1,236 @@
+---
+title: "Paper identification"
+author: "Marc"
+date: "`r Sys.Date()`"
+output: workflowr::wflow_html
+---
+
+Bib file was created containing the previous literature on the topic:
+
+A specialized global software engineering taxonomy for effort estimation
+A taxonomy of web effort predictors
+An Effort Estimation Taxonomy for Agile Software Development
+An extended global software engineering taxonomy
+Taxonomies in software engineering: A Systematic mapping study and a revised taxonomy development method
+Towards a taxonomy of hypermedia and Web application size metrics
+
+#Cross Referencing Papers
+```{python}
+import bibtexparser
+import requests
+from openpyxl import Workbook
+import pandas as pd
+
+# Reading the bib. I used the
+with open('C:/Users/mysit/Desktop/Job/Papers/export.bib') as bibtex_file:
+    bib_database = bibtexparser.load(bibtex_file)
+
+# Create a workbook (dataframe)
+wb = Workbook()
+ws = wb.active
+ws.title = "Citations"
+
+# Create headers
+ws.append(["Original Article Title", "Cited By", "DOI"])
+
+# Iterate over each paper and search for citations
+for entry in bib_database.entries:
+    title = entry.get('title')
+    if title:
+        # Replace spaces with + for URL encoding
+        search_query = title.replace(' ', '+')
+        # API call to CrossRef
+        response = requests.get(f'https://api.crossref.org/works?query.bibliographic={search_query}')
+        if response.status_code == 200:
+            data = response.json()
+            for item in data['message']['items']:
+                cited_title = item.get('title', ['N/A'])[0]  # Get the title or 'N/A' if not present
+                doi = item.get('DOI', 'N/A')  # Get the DOI or 'N/A' if not present
+                # Append the results to the worksheet
+                ws.append([title, cited_title, doi])
+                
+# Save the workbook
+file_path = 'C:/Users/mysit/Desktop/Job/Papers/citations.xlsx'
+wb.save(file_path)
+
+#Remove duplicates
+df = pd.read_excel(file_path)
+
+# Remove duplicate rows based on Cited By title column, we set to upper case to normalize
+df['Cited By'] = df['Cited By'].astype(str).str.upper()
+df = df.drop_duplicates(subset=['Cited By'])
+
+# Filter the dataframe based on keywords in the "Cited By" column
+
+taxonomy_keywords = ["TAXONOMY", "CLASSIFICATION", "GROUPING", "SORTING"]
+
+effort_keywords=["EFFORT ESTIMATION", "EFFORT", "EFFORT FORECAST", "EFFORT FORECASTING", "EFFORT PREDICTION" , "EFFORT ASSESSMENT", "COST ESTIMATION", "COST FORECAST", "COST FORECASTING", "COST PREDICTION", "COST ASSESSMENT"]
+
+software_keywords = ["SOFTWARE ENGINEERING", "WEB EFFORT", "WEB APPLICATION", "GLOBAL SOFTWARE ENGINEERING", "GLOBAL SOFTWARE DEVELOPMENT", "AGILE SOFTWARE DEVELOPMENT", "SOFTWARE ARCHITECTURE", "SOFTWARE DEVELOPMENT", "SOFTWARE DESIGN", "APPLICATION ENGINEERING", "SYSTEM DEVELOPMENT", "WWW ENGINEERING", "WORLD-WIDE-WEB ENGINEERING", "EVIDENCE BASED SOFTWARE ENGINEERING", "EMPIRICAL SOFTWARE ENGINEERING"]
+
+def contains_taxonomy(text, taxonomy_keywords):
+    return any(keyword in text for keyword in taxonomy_keywords)
+
+df_filtered_citations_taxonly = df[df["Cited By"].apply(lambda x: contains_taxonomy(str(x), taxonomy_keywords))]
+
+
+def contains_keywords(text, taxonomy_keywords, effort_keywords, software_keywords):
+    return any(keyword in text for keyword in taxonomy_keywords) and any(keyword in text for keyword in effort_keywords) and any(keyword in text for keyword in software_keywords)
+
+df_filtered_citations = df[df["Cited By"].apply(lambda x: contains_keywords(str(x), taxonomy_keywords, effort_keywords, software_keywords))]
+
+
+
+# Save the cleaned dataframe
+file_path = 'C:/Users/mysit/Desktop/Job/Papers/fwsnowball_filtered_citations.xlsx'
+df_filtered_citations.to_excel(file_path, index=False)
+```
+
+#Make a bib from the exported cited by in the excel
+```{python}
+import bibtexparser
+from bibtexparser.bibdatabase import BibDatabase
+
+# Create an instance of BibDatabase to hold BibTeX entries
+bib_database = BibDatabase()
+
+# Iterate over the filtered DataFrame rows
+for index, row in df_filtered_citations.iterrows():
+    cited_title = row['Cited By']
+    doi = row['DOI']
+    
+    if doi != 'N/A':
+        # Construct BibTeX entry for the cited paper
+        bib_entry = {
+            'title': cited_title,
+            'doi': doi,
+            'ENTRYTYPE': 'article',  # Adjust entry type as necessary
+            'ID': f'{index}'  # Provide a unique ID for each entry
+        }
+        bib_database.entries.append(bib_entry)
+
+# Save the BibTeX database to a file
+new_bib_file_path = 'C:/Users/mysit/Desktop/Job/Papers/df_filtered_citations.bib'
+with open(new_bib_file_path, 'w', encoding='utf-8') as new_bib_file:
+    bibtexparser.dump(bib_database, new_bib_file)
+
+
+```
+
+#Scraping Google Scholar (Can be very slow, and the limit is 1000 entries if it doesn't crash before, so I set it to not run when running all)
+```{python eval=FALSE, include=TRUE}
+import pandas as pd
+import time
+from scholarly import scholarly
+from scholarly._proxy_generator import MaxTriesExceededException
+from tqdm import tqdm
+
+# Function to extract the required information from the search results
+def extract_info(search_query, titles, abstracts):
+    try:
+        for result in tqdm(search_query, desc="Fetching papers", unit="paper"):
+            titles.append(result['bib']['title'])
+            abstracts.append(result['bib'].get('abstract', 'N/A'))
+    except MaxTriesExceededException as e:
+        print(f"Error fetching data: {e}")
+
+# Initialize lists to store data
+titles = []
+abstracts = []
+
+# Search for the combined terms "Taxonomy" and "Effort Estimation"
+print('Fetching data for "Taxonomy, \'Effort Estimation\'"...')
+extract_info(scholarly.search_pubs('Taxonomy, "Effort Estimation"'), titles, abstracts)
+
+# Ensure all lists have the same length by padding them with 'N/A'
+max_len = max(len(titles), len(abstracts))
+
+titles += ['N/A'] * (max_len - len(titles))
+abstracts += ['N/A'] * (max_len - len(abstracts))
+
+# Create a DataFrame
+data = {
+    'Title': titles,
+    'Abstract': abstracts,
+}
+df = pd.DataFrame(data)
+len(df)
+
+# Remove duplicates if any
+df = df.drop_duplicates()
+len(df)
+
+
+file_path = 'C:/Users/mysit/Desktop/Job/Papers/gscholar5.xlsx'
+df.to_excel(file_path, index=False)
+```
+
+#Filter the google results
+```{python}
+import bibtexparser
+import requests
+from openpyxl import Workbook
+import pandas as pd
+from bibtexparser.bibdatabase import BibDatabase
+
+
+file_path = 'C:/Users/mysit/Desktop/Job/Papers/gscholar.xlsx'
+df = pd.read_excel(file_path)
+
+df['Title'] = df['Title'].astype(str).str.upper()
+df['Abstract'] = df['Abstract'].astype(str).str.upper()
+
+# Filter the DataFrame based on keywords in the "Cited By" column
+# Add more relevant keywords as needed
+taxonomy_keywords = ["TAXONOMY", "CLASSIFICATION", "GROUPING", "SORTING"]
+
+effort_keywords=["EFFORT ESTIMATION", "EFFORT", "EFFORT FORECAST", "EFFORT FORECASTING", "EFFORT PREDICTION" , "EFFORT ASSESSMENT", "COST ESTIMATION", "COST FORECAST", "COST FORECASTING", "COST PREDICTION", "COST ASSESSMENT"]
+
+software_keywords = ["SOFTWARE ENGINEERING", "WEB EFFORT", "WEB APPLICATION", "GLOBAL SOFTWARE ENGINEERING", "GLOBAL SOFTWARE DEVELOPMENT", "AGILE SOFTWARE DEVELOPMENT", "SOFTWARE ARCHITECTURE", "SOFTWARE DEVELOPMENT", "SOFTWARE DESIGN", "APPLICATION ENGINEERING", "SYSTEM DEVELOPMENT", "WWW ENGINEERING", "WORLD-WIDE-WEB ENGINEERING", "EVIDENCE BASED SOFTWARE ENGINEERING", "EMPIRICAL SOFTWARE ENGINEERING"]
+
+def contains_keywords(text, taxonomy_keywords, effort_keywords, software_keywords):
+    return any(keyword in text for keyword in taxonomy_keywords) and any(keyword in text for keyword in effort_keywords) and any(keyword in text for keyword in software_keywords)
+
+df_filtered_title = df[df["Title"].apply(lambda x: contains_keywords(str(x), taxonomy_keywords, effort_keywords, software_keywords))]
+df_filtered_abstract = df[df["Abstract"].apply(lambda x: contains_keywords(str(x), taxonomy_keywords, effort_keywords, software_keywords))]
+
+
+
+# Save the cleaned DataFrame back to the Excel file
+file_path = 'C:/Users/mysit/Desktop/Job/Papers/gscholar_filtered_title.xlsx'
+df_filtered_title.to_excel(file_path, index=False)
+file_path = 'C:/Users/mysit/Desktop/Job/Papers/gscholar_filtered_abstract.xlsx'
+df_filtered_abstract.to_excel(file_path, index=False)
+```
+
+# Making the bib file
+
+```{python}
+import bibtexparser
+import requests
+from openpyxl import Workbook
+import pandas as pd
+from bibtexparser.bibdatabase import BibDatabase
+
+# Create an instance of BibDatabase to hold BibTeX entries
+bib_database = BibDatabase()
+
+# Iterate over the filtered DataFrame rows
+bib_entries = []
+for i, title in enumerate(df_filtered_title['Title']):
+    entry = {
+        'ENTRYTYPE': 'article',
+        'ID': f'entry{i}',
+        'title': title
+    }
+    bib_entries.append(entry)
+
+bib_database = bibtexparser.bibdatabase.BibDatabase()
+bib_database.entries = bib_entries
+
+
+# Write to .bib file
+bib_file_path = 'C:/Users/mysit/Desktop/Job/Papers/google_titles_only.bib'
+with open(bib_file_path, 'w') as bibfile:
+    bibtexparser.dump(bib_database, bibfile)
+```
