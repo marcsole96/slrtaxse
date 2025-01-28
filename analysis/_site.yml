@@ -5,6 +5,10 @@ navbar:
   left:
   - text: Home
     href: index.html
+  - text: Bib File Parser
+    href: bib-file-parser.html
+  - text: Robustness and Conciseness
+    href: robustnessandconciseness.html
   - text: About
     href: about.html
   - text: License
