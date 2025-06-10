@@ -8,7 +8,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-A Systematic Literature Review on current Taxonomies for Effort Estimation in Software Engineering
+A Systematic Literature Review of Taxonomies for Software Effort Estimation  
 Marc Solé Estragués, Emilia Mendes
 msole@ece.au.dk, eme@ece.au.dk
 Department of Electrical & Computer Engineering
