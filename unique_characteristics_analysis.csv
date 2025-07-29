@@ -1,0 +1,304 @@
+Taxonomy,Unique_Characteristic,Total_Characteristics_in_Taxonomy,Total_Unique_in_Taxonomy,Percentage_Unique_in_Taxonomy
+Bajta,variation reduction,57,39,68.42105263157895
+Bajta,conceptualization,57,39,68.42105263157895
+Bajta,risk,57,39,68.42105263157895
+Bajta,baseline comparison,57,39,68.42105263157895
+Bajta,temporal distance,57,39,68.42105263157895
+Bajta,agile,57,39,68.42105263157895
+Bajta,group-based estimation,57,39,68.42105263157895
+Bajta,capability maturity model integration,57,39,68.42105263157895
+Bajta,telecommunication,57,39,68.42105263157895
+Bajta,hardware,57,39,68.42105263157895
+Bajta,near offshore,57,39,68.42105263157895
+Bajta,cbr,57,39,68.42105263157895
+Bajta,non-machine learning,57,39,68.42105263157895
+Bajta,portfolio,57,39,68.42105263157895
+Bajta,staff/cost,57,39,68.42105263157895
+Bajta,healthcare,57,39,68.42105263157895
+Bajta,size report,57,39,68.42105263157895
+Bajta,execution,57,39,68.42105263157895
+Bajta,delphi,57,39,68.42105263157895
+Bajta,sensitivity analysis,57,39,68.42105263157895
+Bajta,geographical distance,57,39,68.42105263157895
+Bajta,ga,57,39,68.42105263157895
+Bajta,preliminary planning,57,39,68.42105263157895
+Bajta,feasibility study,57,39,68.42105263157895
+Bajta,statistics analysis,57,39,68.42105263157895
+Bajta,individual,57,39,68.42105263157895
+Bajta,socio-cultural distance,57,39,68.42105263157895
+Bajta,commissioning,57,39,68.42105263157895
+Bajta,other,57,39,68.42105263157895
+Bajta,se,57,39,68.42105263157895
+Bajta,value,57,39,68.42105263157895
+Bajta,system investigation,57,39,68.42105263157895
+Bajta,fuzzy similar,57,39,68.42105263157895
+Bajta,detail planning,57,39,68.42105263157895
+Bajta,far offshore,57,39,68.42105263157895
+Bajta,close onshore,57,39,68.42105263157895
+Bajta,research & dev,57,39,68.42105263157895
+Bajta,effort hours,57,39,68.42105263157895
+Bajta,machine learning,57,39,68.42105263157895
+Britto_2017,connectivity density,164,158,96.34146341463415
+Britto_2017,in-house experience,164,158,96.34146341463415
+Britto_2017,entity count,164,158,96.34146341463415
+Britto_2017,component count,164,158,96.34146341463415
+Britto_2017,node slot size,164,158,96.34146341463415
+Britto_2017,spi program,164,158,96.34146341463415
+Britto_2017,usability level,164,158,96.34146341463415
+Britto_2017,technical factors,164,158,96.34146341463415
+Britto_2017,concern operation count,164,158,96.34146341463415
+Britto_2017,interface complexity,164,158,96.34146341463415
+Britto_2017,cluster node size,164,158,96.34146341463415
+Britto_2017,semantic association count,164,158,96.34146341463415
+Britto_2017,portability level,164,158,96.34146341463415
+Britto_2017,module attribute count,164,158,96.34146341463415
+Britto_2017,modularity level,164,158,96.34146341463415
+Britto_2017,risk level,164,158,96.34146341463415
+Britto_2017,concern module count,164,158,96.34146341463415
+Britto_2017,metrics program,164,158,96.34146341463415
+Britto_2017,project.infrastructure,164,158,96.34146341463415
+Britto_2017,control flow complexity,164,158,96.34146341463415
+Britto_2017,scalability level,164,158,96.34146341463415
+Britto_2017,information slot count,164,158,96.34146341463415
+Britto_2017,platform volatility level,164,158,96.34146341463415
+Britto_2017,reused component count,164,158,96.34146341463415
+Britto_2017,team capability,164,158,96.34146341463415
+Britto_2017,statement count,164,158,96.34146341463415
+Britto_2017,documentation level,164,158,96.34146341463415
+Britto_2017,oo experience level,164,158,96.34146341463415
+Britto_2017,model link complexity,164,158,96.34146341463415
+Britto_2017,media count,164,158,96.34146341463415
+Britto_2017,module point cut count,164,158,96.34146341463415
+Britto_2017,authoring tool type,164,158,96.34146341463415
+Britto_2017,web page allocation,164,158,96.34146341463415
+Britto_2017,project.type,164,158,96.34146341463415
+Britto_2017,web page count,164,158,96.34146341463415
+Britto_2017,lessons learned repository,164,158,96.34146341463415
+Britto_2017,readability level,164,158,96.34146341463415
+Britto_2017,class coupling,164,158,96.34146341463415
+Britto_2017,adaptation complexity,164,158,96.34146341463415
+Britto_2017,mapped workflows,164,158,96.34146341463415
+Britto_2017,cluster count,164,158,96.34146341463415
+Britto_2017,comment count,164,158,96.34146341463415
+Britto_2017,reused media count,164,158,96.34146341463415
+Britto_2017,association slot size,164,158,96.34146341463415
+Britto_2017,design volatility,164,158,96.34146341463415
+Britto_2017,cohesion,164,158,96.34146341463415
+Britto_2017,program count,164,158,96.34146341463415
+Britto_2017,time efficiency level,164,158,96.34146341463415
+Britto_2017,reused high feature count,164,158,96.34146341463415
+Britto_2017,publishing unit count,164,158,96.34146341463415
+Britto_2017,diffusion cut count,164,158,96.34146341463415
+Britto_2017,focus factor,164,158,96.34146341463415
+Britto_2017,class complexity,164,158,96.34146341463415
+Britto_2017,work team level,164,158,96.34146341463415
+Britto_2017,time restriction,164,158,96.34146341463415
+Britto_2017,cyclomatic complexity,164,158,96.34146341463415
+Britto_2017,attribute count,164,158,96.34146341463415
+Britto_2017,web objects,164,158,96.34146341463415
+Britto_2017,communication level,164,158,96.34146341463415
+Britto_2017,use case count,164,158,96.34146341463415
+Britto_2017,requirements novelty level,164,158,96.34146341463415
+Britto_2017,server script count,164,158,96.34146341463415
+Britto_2017,data web points,164,158,96.34146341463415
+Britto_2017,productivity level,164,158,96.34146341463415
+Britto_2017,number of projects in parallel,164,158,96.34146341463415
+Britto_2017,trainability level,164,158,96.34146341463415
+Britto_2017,reused low feature count,164,158,96.34146341463415
+Britto_2017,new web page count,164,158,96.34146341463415
+Britto_2017,model collection complexity,164,158,96.34146341463415
+Britto_2017,collection slot size,164,158,96.34146341463415
+Britto_2017,it literacy,164,158,96.34146341463415
+Britto_2017,component granularity level,164,158,96.34146341463415
+Britto_2017,difficulty level,164,158,96.34146341463415
+Britto_2017,international function point users group,164,158,96.34146341463415
+Britto_2017,lines of code,164,158,96.34146341463415
+Britto_2017,data flow complexity,164,158,96.34146341463415
+Britto_2017,component slot count,164,158,96.34146341463415
+Britto_2017,segment count,164,158,96.34146341463415
+Britto_2017,architecture,164,158,96.34146341463415
+Britto_2017,domain experience level,164,158,96.34146341463415
+Britto_2017,integration with legacy systems,164,158,96.34146341463415
+Britto_2017,reused program count,164,158,96.34146341463415
+Britto_2017,stability level,164,158,96.34146341463415
+Britto_2017,flexibility level,164,158,96.34146341463415
+Britto_2017,model slot size,164,158,96.34146341463415
+Britto_2017,inner/sub concern count,164,158,96.34146341463415
+Britto_2017,requirements clarity level,164,158,96.34146341463415
+Britto_2017,operation count,164,158,96.34146341463415
+Britto_2017,data usage complexity,164,158,96.34146341463415
+Britto_2017,link count,164,158,96.34146341463415
+Britto_2017,compactness,164,158,96.34146341463415
+Britto_2017,association center slot count,164,158,96.34146341463415
+Britto_2017,new media count,164,158,96.34146341463415
+Britto_2017,media allocation,164,158,96.34146341463415
+Britto_2017,cohesion complexity,164,158,96.34146341463415
+Britto_2017,product.type,164,158,96.34146341463415
+Britto_2017,cluster slot count,164,158,96.34146341463415
+Britto_2017,process efficiency level,164,158,96.34146341463415
+Britto_2017,concurrency level,164,158,96.34146341463415
+Britto_2017,concern coupling,164,158,96.34146341463415
+Britto_2017,stratum,164,158,96.34146341463415
+Britto_2017,rapid app development,164,158,96.34146341463415
+Britto_2017,operational mode,164,158,96.34146341463415
+Britto_2017,testability level,164,158,96.34146341463415
+Britto_2017,page complexity,164,158,96.34146341463415
+Britto_2017,personality,164,158,96.34146341463415
+Britto_2017,feature count,164,158,96.34146341463415
+Britto_2017,reused comment count,164,158,96.34146341463415
+Britto_2017,output complexity,164,158,96.34146341463415
+Britto_2017,processing requirements,164,158,96.34146341463415
+Britto_2017,number of programming languages,164,158,96.34146341463415
+Britto_2017,section count,164,158,96.34146341463415
+Britto_2017,low feature count,164,158,96.34146341463415
+Britto_2017,input complexity,164,158,96.34146341463415
+Britto_2017,component complexity,164,158,96.34146341463415
+Britto_2017,object-oriented function points,164,158,96.34146341463415
+Britto_2017,deployment platform experience level,164,158,96.34146341463415
+Britto_2017,reused media allocation,164,158,96.34146341463415
+Britto_2017,accessibility level,164,158,96.34146341463415
+Britto_2017,requirements volatility level,164,158,96.34146341463415
+Britto_2017,project management level,164,158,96.34146341463415
+Britto_2017,publishing model unit count,164,158,96.34146341463415
+Britto_2017,database size,164,158,96.34146341463415
+Britto_2017,robustness level,164,158,96.34146341463415
+Britto_2017,installability level,164,158,96.34146341463415
+Britto_2017,programming language experience level,164,158,96.34146341463415
+Britto_2017,storage constraint,164,158,96.34146341463415
+Britto_2017,development restriction,164,158,96.34146341463415
+Britto_2017,model association complexity,164,158,96.34146341463415
+Britto_2017,model node size,164,158,96.34146341463415
+Britto_2017,product.experience level,164,158,96.34146341463415
+Britto_2017,novelty level,164,158,96.34146341463415
+Britto_2017,memory efficiency level,164,158,96.34146341463415
+Britto_2017,slot count,164,158,96.34146341463415
+Britto_2017,module count,164,158,96.34146341463415
+Britto_2017,security level,164,158,96.34146341463415
+Britto_2017,tool experience level,164,158,96.34146341463415
+Britto_2017,software development experience,164,158,96.34146341463415
+Britto_2017,indifferent concern count,164,158,96.34146341463415
+Britto_2017,quality level,164,158,96.34146341463415
+Britto_2017,object-oriented heuristic function points,164,158,96.34146341463415
+Britto_2017,node count,164,158,96.34146341463415
+Britto_2017,media duration,164,158,96.34146341463415
+Britto_2017,reused lines of code,164,158,96.34146341463415
+Britto_2017,innovation level,164,158,96.34146341463415
+Britto_2017,platform support level,164,158,96.34146341463415
+Britto_2017,slot granularity level,164,158,96.34146341463415
+Britto_2017,reliability level,164,158,96.34146341463415
+Britto_2017,reusability level,164,158,96.34146341463415
+Britto_2017,product.structure,164,158,96.34146341463415
+Britto_2017,common software measurement international consortium,164,158,96.34146341463415
+Britto_2017,collection center slot count,164,158,96.34146341463415
+Britto_2017,client script count,164,158,96.34146341463415
+Britto_2017,software reuse,164,158,96.34146341463415
+Britto_2017,anchor count,164,158,96.34146341463415
+Britto_2017,high feature count,164,158,96.34146341463415
+Britto_2017,layout complexity,164,158,96.34146341463415
+Britto_2017,resource level,164,158,96.34146341463415
+Britto_2016,semi-distributed,17,17,100.0
+Britto_2016,estimator & provider,17,17,100.0
+Britto_2016,provider,17,17,100.0
+Britto_2016,relationship.location,17,17,100.0
+Britto_2016,site.location,17,17,100.0
+Britto_2016,centralized,17,17,100.0
+Britto_2016,late,17,17,100.0
+Britto_2016,relationship.geographic distance,17,17,100.0
+Britto_2016,early & late,17,17,100.0
+Britto_2016,relationship.legal entity,17,17,100.0
+Britto_2016,site.geographic distance,17,17,100.0
+Britto_2016,estimator,17,17,100.0
+Britto_2016,early,17,17,100.0
+Britto_2016,site.temporal distance,17,17,100.0
+Britto_2016,relationship.temporal distance,17,17,100.0
+Britto_2016,distributed,17,17,100.0
+Britto_2016,site.legal entity,17,17,100.0
+Dasthi,basic-combination,11,8,72.72727272727273
+Dasthi,ai-combined hybrid,11,8,72.72727272727273
+Dasthi,software life cycle management,11,8,72.72727272727273
+Dasthi,software evaluation and estimation for risk,11,8,72.72727272727273
+Dasthi,artificial neural networks,11,8,72.72727272727273
+Dasthi,fuzzy logic,11,8,72.72727272727273
+Dasthi,computational intelligence.swarm,11,8,72.72727272727273
+Dasthi,computational intelligence.evolutionary,11,8,72.72727272727273
+Mendes,validated theoretically,26,24,92.3076923076923
+Mendes,absolute,26,24,92.3076923076923
+Mendes,web software application,26,24,92.3076923076923
+Mendes,ratio,26,24,92.3076923076923
+Mendes,validated empirically,26,24,92.3076923076923
+Mendes,validation.both,26,24,92.3076923076923
+Mendes,functionality,26,24,92.3076923076923
+Mendes,program/script,26,24,92.3076923076923
+Mendes,solution-oriented metric,26,24,92.3076923076923
+Mendes,web hypermedia application,26,24,92.3076923076923
+Mendes,early size metric,26,24,92.3076923076923
+Mendes,model dependency.specific,26,24,92.3076923076923
+Mendes,class.length,26,24,92.3076923076923
+Mendes,web application,26,24,92.3076923076923
+Mendes,computation.direct,26,24,92.3076923076923
+Mendes,computation.indirect,26,24,92.3076923076923
+Mendes,model dependency.nonspecific,26,24,92.3076923076923
+Mendes,problem-oriented metric,26,24,92.3076923076923
+Mendes,ordinal,26,24,92.3076923076923
+Mendes,interval,26,24,92.3076923076923
+Mendes,late size metric,26,24,92.3076923076923
+Mendes,nominal,26,24,92.3076923076923
+Mendes,validation.none,26,24,92.3076923076923
+Mendes,media,26,24,92.3076923076923
+Usman,bidding,75,57,76.0
+Usman,pair days,75,57,76.0
+Usman,mean magnitude of relative error,75,57,76.0
+Usman,customized extreme programming,75,57,76.0
+Usman,ideal hours,75,57,76.0
+Usman,size.other,75,57,76.0
+Usman,effort estimate.type.other,75,57,76.0
+Usman,median magnitude of relative error,75,57,76.0
+Usman,story points,75,57,76.0
+Usman,use case,75,57,76.0
+Usman,sprint,75,57,76.0
+Usman,distributed: far offshore,75,57,76.0
+Usman,use case points method,75,57,76.0
+Usman,feature-driven development,75,57,76.0
+Usman,function points,75,57,76.0
+Usman,customized scrum,75,57,76.0
+Usman,education,75,57,76.0
+Usman,point,75,57,76.0
+Usman,hours/days,75,57,76.0
+Usman,government/military,75,57,76.0
+Usman,task,75,57,76.0
+Usman,co-located,75,57,76.0
+Usman,distributed: near offshore,75,57,76.0
+Usman,crystal,75,57,76.0
+Usman,accuracy level.value,75,57,76.0
+Usman,communications industry,75,57,76.0
+Usman,estimated activities.all,75,57,76.0
+Usman,three point,75,57,76.0
+Usman,non functional requirements.other,75,57,76.0
+Usman,project domain.other,75,57,76.0
+Usman,estimation entity.other,75,57,76.0
+Usman,group,75,57,76.0
+Usman,transportation,75,57,76.0
+Usman,distribution,75,57,76.0
+Usman,number of entities estimated.value,75,57,76.0
+Usman,estimation techniques.other,75,57,76.0
+Usman,retail/wholesale,75,57,76.0
+Usman,not used,75,57,76.0
+Usman,bias of relative error,75,57,76.0
+Usman,distributed: close onshore,75,57,76.0
+Usman,kanban,75,57,76.0
+Usman,planning poker,75,57,76.0
+Usman,accuracy measure.other,75,57,76.0
+Usman,dynamic systems development method,75,57,76.0
+Usman,unit.other,75,57,76.0
+Usman,daily,75,57,76.0
+Usman,user story,75,57,76.0
+Usman,manufacturing,75,57,76.0
+Usman,release,75,57,76.0
+Usman,single,75,57,76.0
+Usman,health,75,57,76.0
+Usman,user case points,75,57,76.0
+Usman,considered without any metric,75,57,76.0
+Usman,extreme programming,75,57,76.0
+Usman,not applicable,75,57,76.0
+Usman,scrum,75,57,76.0
+Usman,actual effort.value,75,57,76.0
