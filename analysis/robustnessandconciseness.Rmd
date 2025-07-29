@@ -416,9 +416,8 @@ new_taxonomy = {
             },
             'Project domain': {
                 "SE": "Systems Engineering",
-                "Research & Dev": {
-                    "Telecommunication": "Telecommunication"
-                },
+                "Research & Dev":"Research & Dev",
+                "Telecommunication": "Telecommunication",
                 "Finance": "Finance",
                 "Healthcare": "Healthcare",
                 "Project domain.Other": "Project domain.Other"
@@ -1519,15 +1518,21 @@ plt.rcParams['font.family'] = 'serif'
 
 # Step 1: Define the sets
 # Combine the sets into a dictionary
-sets = {
-    'Bajta': {"Agile", "Analysis", "Availability", "Baseline comparison", "Bidding", "CBR", "CMMI", "COCOMO", "Commissioning", "Conceptualization", "Delphi", "Detail planning", "Design", "Distant onshore", "Expert judgment", "Estimated value", "Execution", "Effort hours", "Feasibility study", "Finance", "Fuzzy similarity", "GA", "Group-based estimation", "Healthcare", "Hardware", "Implementation", "Individual", "Machine learning", "Maintainability", "Maintenance", "Near offshore", "Non-machine learning", "Not considered", "Number of team members", "Performance", "Portfolio", "Preliminary planning", "Reliability", "Research & development", "Risk", "Security", "Sensitivity analysis", "Size report", "Socio-cultural distance", "Statistical analysis", "Staff/cost", "System investigation", "Temporal distance", "Testing", "Value", "Variation reduction"},
-    'Britto_2017': {"Accessibility level", "Adaptation complexity", "Anchor count", "Architecture", "Association center slot count", "Association slot size", "Attribute count", "Authoring tool type", "Availability level", "Class complexity", "Class coupling", "Client script count", "Cluster count", "Cluster node size", "Cluster slot count", "Cohesion", "Cohesion complexity", "Collection center slot count", "Collection slot size", "Comment count", "Communication level", "Compactness", "Component complexity", "Component count", "Component granularity level", "Component slot count", "Concern coupling", "Concern module count", "Concern operation count", "Concurrency level", "Connectivity density", "Control flow complexity", "Cyclomatic complexity", "Data Web points", "Data flow complexity", "Data usage complexity", "Database size", "Deployment platform experience level", "Design volatility", "Development restriction", "Difficulty level", "Diffusion cut count", "Documentation level", "Domain experience level", "Entity count", "Experience level", "Feature count", "Flexibility level", "Focus factor", "High feature count", "IT literacy", "In-house experience", "Indifferent concern count", "Information slot count", "Infrastructure", "Inner/sub concern count", "Innovation level", "Input complexity", "Installability level", "Integration with legacy systems", "Interface complexity", "International Function Point Users Group", "Layout complexity", "Lessons learned repository", "Lines of code", "Link count", "Low feature count", "Maintainability level", "Mapped workflows", "Media allocation", "Media count", "Media duration", "Memory efficiency level", "Metrics program", "Model association complexity", "Model collection complexity", "Model link complexity", "Model node size", "Model slot size", "Modularity level", "Module attribute count", "Module count", "Module point cut count", "Motivation level", "New Web page count", "New complexity", "New media count", "Node count", "Node slot size", "Novelty level", "Number of programming languages", "Number of projects in parallel", "OO experience level", "Object-Oriented Function Points", "Operation count", "Operational mode", "Output complexity", "Page complexity", "Personality", "Platform support level", "Platform volatility level", "Portability level", "Process efficiency level", "Processing requirements", "Productivity level", "Program count", "Programming language experience level", "Project management level", "Publishing model unit count", "Publishing unit count", "Quality level", "Rapid app development", "Readability level", "Reliability level", "Requirements clarity level", "Requirements novelty level", "Requirements volatility level", "Resource level", "Reusability level", "Reused comment count", "Reused component count", "Reused high feature count", "Reused lines of code", "Reused low feature count", "Reused media allocation", "Reused media count", "Reused program count", "Risk level", "Robustness level", "SPI program", "Scalability level", "Section count", "Security level", "Segment count", "Semantic association count", "Server script count", "Slot count", "Slot granularity level", "Software development experience", "Software reuse", "Stability level", "Statement count", "Storage constraint", "Structure", "Team capability", "Team size", "Technical factors", "Testability level", "Time efficiency level", "Time restriction", "Tool experience level", "Total complexity", "Trainability level", "Type", "Usability level", "Use case count", "Web objects", "Web page allocation", "Web page count", "Work Team level"},
-    'Britto_2016': {"Centralized", "distributed", "Early", "Estimator", "Early & Late", "Estimator & Provider", "geographic distance", "geographic distance", "late", "legal entity", "location", "provider", "semi-distributed", "temporal distance", "temporal distance"},
-    'Dasthi': {"ANN", "Analogy Base", "COCOMO", "Evolutionary", "Expert Judgment", "FUZZY", "SEER-SEM", "SLIM", "Swarm"},
-    'Mendes': {"Absolute", "both", "complexity", "functionality", "Directly", "Early size metric", "Empirically", "indirectly", "interval", "Length", "late size metric", "media", "none", "Nominal", "nonspecific", "ordinal", "other", "Problem oriented metric", "program/script", "ratio", "solution oriented metric", "Specific", "theoretically", "Web application", "Web hypermedia application", "Web software application"},
-    'Usman': {"Analysis", "all", "analogy", "availability", "bidding", "Close Onshore", "Co-located", "Communications industry", "Considered", "crystal", "customized XP", "customized scrum", "daily", "design", "distribution", "education", "expert judgement", "DSDM", "Distant Onshore", "Estimate value(s)", "FDD", "Far Offshore", "financial", "function points", "Hours/days", "health", "ideal hours", "implementation", "kanban", "maintainability", "maintenance", "manufacturing", "MMRE", "MdMRE", "Near Offshore", "No. of team members", "not applicable", "not considered", "not used", "Other", "Performance", "Planning poker", "Point", "pair days", "Release", "reliability", "retail/wholesale", "Single", "scrum", "security", "sprint", "Story points", "testing", "three point", "task", "transportation", "UC points", "User story", "Value", "XP"}
-}
+Bajta = {'Conceptualization', 'Feasibility study', 'Preliminary planning', 'Detail Planning', 'Execution', 'Commissioning', 'System investigation', 'Analysis', 'Design', 'Implementation', 'Testing', 'Maintenance', 'Other', 'SE', 'Telecommunication', 'Finance', 'Healthcare', 'Other', 'Close onshore', 'Distant onshore', 'Near offshore', 'Far offshore', 'Constructive Cost Model', 'Capability Maturity Model Integration', 'Agile', 'Delphi', 'GA', 'CBR', 'Fuzzy similar', 'Other', 'Value', 'No of team members', 'Expert judgment', 'Machine learning', 'Non-machine learning', 'Individual', 'Group-based estimation', 'Estimate value', 'Value', 'Effort hours', 'Staff/cost', 'Hardware', 'Risk', 'Portfolio', 'Baseline comparison', 'Variation reduction', 'Sensitivity analysis', 'Size report', 'Statistics analysis', 'Considered', 'Not considered', 'Considered', 'Not Considered', 'Performance', 'Security', 'Availability', 'Reliability', 'Maintainability', 'Other', 'Geographical distance', 'Temporal distance', 'Socio-cultural distance'}
+Britto_2017 = {'Web page count', 'Media count', 'New media count', 'New Web page count', 'Link count', 'Program count', 'Reused component count', 'Lines of code', 'Reused program count', 'Reused media count', 'Web page allocation', 'Reused lines of code', 'Media allocation', 'Reused media allocation', 'Entity count', 'Attribute count', 'Component count', 'Statement count', 'Node count', 'Collection slot size', 'Component granularity level', 'Slot granularity level', 'Model node size', 'Cluster node size', 'Node slot size', 'Publishing model unit count', 'Model slot size', 'Association slot size', 'Client script count', 'Server script count', 'Information slot count', 'Association center slot count', 'Collection center slot count', 'Component slot count', 'Semantic association count', 'Segment count', 'Slot count', 'Cluster slot count', 'Cluster count', 'Publishing unit count', 'Section count', 'Inner/sub concern count', 'Indifferent concern count', 'Module point cut count', 'Module count', 'Module attribute count', 'Operation count', 'Comment count', 'Reused comment count', 'Media duration', 'Diffusion cut count', 'Concern module count', 'Concern operation count', 'Anchor count', 'High feature count', 'Low feature count', 'Reused high feature count', 'Reused low feature count', 'Web objects', 'Common Software Measurement International Consortium', 'International Function Point Users Group', 'Object-Oriented Heuristic Function Points', 'Object-Oriented Function Points', 'Use case count', 'Feature count', 'Data Web points', 'Cohesion', 'Class coupling', 'Concern coupling', 'Connectivity density', 'Cyclomatic complexity', 'Model collection complexity', 'Model association complexity', 'Model link complexity', 'Page complexity', 'Component complexity', 'Total complexity', 'Adaptation complexity', 'New complexity', 'Data usage complexity', 'Data flow complexity', 'Cohesion complexity', 'Interface complexity', 'Control flow complexity', 'Class complexity', 'Layout complexity', 'Input complexity', 'Output complexity', 'Product.Type', 'Stratum', 'Compactness', 'Product.Structure', 'Architecture', 'Integration with legacy systems', 'Concurrency level', 'Processing requirements', 'Database size', 'Requirements volatility level', 'Requirements novelty level', 'Reliability level', 'Maintainability level', 'Time efficiency level', 'Memory efficiency level', 'Portability level', 'Scalability level', 'Quality level', 'Usability level', 'Readability level', 'Security level', 'Installability level', 'Modularity level', 'Flexibility level', 'Testability level', 'Accessibility level', 'Trainability level', 'Innovation level', 'Technical factors', 'Storage constraint', 'Reusability level', 'Robustness level', 'Design volatility', 'Product.Experience level', 'Requirements clarity level', 'Availability level', 'IT literacy', 'Mapped workflows', 'Personality', 'SPI program', 'Metrics program', 'Number of projects in parallel', 'Software reuse', 'Documentation level', 'Number of programming languages', 'Project.Type', 'Process efficiency level', 'Project management level', 'Project.Infrastructure', 'Development restriction', 'Time restriction', 'Risk level', 'Rapid app development', 'Operational mode', 'Resource level', 'Lessons learned repository', 'Domain experience level', 'Team size', 'Deployment platform experience level', 'Team capability', 'Programming language experience level', 'Tool experience level', 'Communication level', 'Software development experience', 'Work Team level', 'Stability level', 'Motivation level', 'Focus factor', 'OO experience level', 'In-house experience', 'Authoring tool type', 'Productivity level', 'Novelty level', 'Platform volatility level', 'Difficulty level', 'Platform support level'}
+Britto_2016 = {'Site.Location', 'Site.Legal Entity', 'Site.Geographic Distance', 'Site.Temporal Distance', 'Early', 'Early & Late', 'Late', 'Estimator', 'Estimator & Provider', 'Provider', 'Relationship.Location', 'Relationship.Legal Entity', 'Relationship.Geographic Distance', 'Relationship.Temporal Distance', 'Centralized', 'Distributed', 'Semi-distributed'}
+Dasthi = {'Constructive Cost Model', 'Software Life Cycle Management', 'Software Evaluation and Estimation for Risk', 'Expert Judgment', 'Analogy-Based', 'Basic-Combination', 'Fuzzy Logic', 'Artificial Neural Networks', 'Computational Intelligence.swarm', 'Computational Intelligence.evolutionary', 'AI-Combined hybrid'}
+Mendes = {'Motivation', 'Early size metric', 'Late size metric', 'Problem-oriented metric', 'Solution-oriented metric', 'Class.Length', 'Functionality', 'Complexity', 'Web hypermedia application', 'Web software application', 'Web application', 'Media', 'Program/Script', 'Nominal', 'Ordinal', 'Interval', 'Ratio', 'Absolute', 'Computation.Direct', 'Computation.Indirect', 'Validated Empirically', 'Validated Theoretically', 'Validation.Both', 'Validation.None', 'Model dependency.Specific', 'Model dependency.Nonspecific'}
+Usman = {'Release', 'Sprint', 'Daily', 'Bidding', 'Analysis', 'Design', 'Implementation', 'Testing', 'Maintenance', 'Estimated activities.All', 'Extreme Programming', 'Scrum', 'Customized Extreme Programming', 'Customized Scrum', 'Dynamic Systems Development Method', 'Crystal', 'Feature-Driven Development', 'Kanban', 'Communications industry', 'Transportation', 'Financial', 'Education', 'Health', 'Retail/Wholesale', 'Manufacturing', 'Government/Military', 'Project domain.Other', 'Co-located', 'Distributed: Close Onshore', 'Distributed: Distant Onshore', 'Distributed: Near Offshore', 'Distributed: Far Offshore', 'User story', 'Task', 'Use case', 'Estimation entity.Other', 'Number of entities estimated.Value', 'No. of team members', 'Planning Poker', 'Expert Judgement', 'Analogy', 'Use case points method', 'Estimation Techniques.Other', 'Single', 'Group', 'Story points', 'User case points', 'Function points', 'Size.Other', 'Not used', 'Considered without any metric', 'Considered', 'Not Considered', 'Considered', 'Not Considered', 'Performance', 'Security', 'Availability', 'Reliability', 'Maintainability', 'Non functional requirements.Other', 'Not considered', 'Considered', 'Not Considered', 'Not applicable', 'Considered', 'Not Considered', 'Estimate value(s)', 'Actual effort.Value', 'Point', 'Three point', 'Distribution', 'Effort estimate.Type.Other', 'Hours/days', 'Pair days', 'Ideal hours', 'Unit.Other', 'Accuracy Level.Value', 'Mean Magnitude of Relative Error', 'Median Magnitude of Relative Error', 'Bias of Relative Error', 'Accuracy measure.Other', 'Not used'}
 
+sets = {
+    'Bajta': Bajta,
+    'Britto_2017': Britto_2017,
+    'Britto_2016': Britto_2016,
+    'Dasthi': Dasthi,
+    'Mendes': Mendes,
+    'Usman': Usman
+}
 
 # Step 2: Flatten the sets into a dataframe (assuming 'sets' is already defined)
 words = []
@@ -1692,12 +1697,12 @@ plt.style.use('seaborn-v0_8-whitegrid')  # You can change this to any available 
 
 plt.rcParams['font.family'] = 'serif'
 # Step 1: Define the sets
-Bajta = {"Agile", "Analysis", "Availability", "Baseline comparison", "Bidding", "CBR", "CMMI", "COCOMO", "Commissioning", "Conceptualization", "Delphi", "Detail planning", "Design", "Distant onshore", "Expert judgment", "Estimated value", "Execution", "Effort hours", "Feasibility study", "Finance", "Fuzzy similarity", "GA", "Group-based estimation", "Healthcare", "Hardware", "Implementation", "Individual", "Machine learning", "Maintainability", "Maintenance", "Near offshore", "Non-machine learning", "Not considered", "Number of team members", "Performance", "Portfolio", "Preliminary planning", "Reliability", "Research & development", "Risk", "Security", "Sensitivity analysis", "Size report", "Socio-cultural distance", "Statistical analysis", "Staff/cost", "System investigation", "Temporal distance", "Testing", "Value", "Variation reduction"}
-Britto_2017 = {"Accessibility level", "Adaptation complexity", "Anchor count", "Architecture", "Association center slot count", "Association slot size", "Attribute count", "Authoring tool type", "Availability level", "Class complexity", "Class coupling", "Client script count", "Cluster count", "Cluster node size", "Cluster slot count", "Cohesion", "Cohesion complexity", "Collection center slot count", "Collection slot size", "Comment count", "Communication level", "Compactness", "Component complexity", "Component count", "Component granularity level", "Component slot count", "Concern coupling", "Concern module count", "Concern operation count", "Concurrency level", "Connectivity density", "Control flow complexity", "Cyclomatic complexity", "Data Web points", "Data flow complexity", "Data usage complexity", "Database size", "Deployment platform experience level", "Design volatility", "Development restriction", "Difficulty level", "Diffusion cut count", "Documentation level", "Domain experience level", "Entity count", "Experience level", "Feature count", "Flexibility level", "Focus factor", "High feature count", "IT literacy", "In-house experience", "Indifferent concern count", "Information slot count", "Infrastructure", "Inner/sub concern count", "Innovation level", "Input complexity", "Installability level", "Integration with legacy systems", "Interface complexity", "International Function Point Users Group", "Layout complexity", "Lessons learned repository", "Lines of code", "Link count", "Low feature count", "Maintainability level", "Mapped workflows", "Media allocation", "Media count", "Media duration", "Memory efficiency level", "Metrics program", "Model association complexity", "Model collection complexity", "Model link complexity", "Model node size", "Model slot size", "Modularity level", "Module attribute count", "Module count", "Module point cut count", "Motivation level", "New Web page count", "New complexity", "New media count", "Node count", "Node slot size", "Novelty level", "Number of programming languages", "Number of projects in parallel", "OO experience level", "Object-Oriented Function Points", "Operation count", "Operational mode", "Output complexity", "Page complexity", "Personality", "Platform support level", "Platform volatility level", "Portability level", "Process efficiency level", "Processing requirements", "Productivity level", "Program count", "Programming language experience level", "Project management level", "Publishing model unit count", "Publishing unit count", "Quality level", "Rapid app development", "Readability level", "Reliability level", "Requirements clarity level", "Requirements novelty level", "Requirements volatility level", "Resource level", "Reusability level", "Reused comment count", "Reused component count", "Reused high feature count", "Reused lines of code", "Reused low feature count", "Reused media allocation", "Reused media count", "Reused program count", "Risk level", "Robustness level", "SPI program", "Scalability level", "Section count", "Security level", "Segment count", "Semantic association count", "Server script count", "Slot count", "Slot granularity level", "Software development experience", "Software reuse", "Stability level", "Statement count", "Storage constraint", "Structure", "Team capability", "Team size", "Technical factors", "Testability level", "Time efficiency level", "Time restriction", "Tool experience level", "Total complexity", "Trainability level", "Type", "Usability level", "Use case count", "Web objects", "Web page allocation", "Web page count", "Work Team level"}
-Britto_2016 = {"Centralized", "distributed", "Early", "Estimator", "Early & Late", "Estimator & Provider", "geographic distance", "geographic distance", "late", "legal entity", "location", "provider", "semi-distributed", "temporal distance", "temporal distance"}
-Dasthi = {"ANN", "Analogy Base", "COCOMO", "Evolutionary", "Expert Judgment", "FUZZY", "SEER-SEM", "SLIM", "Swarm"}
-Mendes = {"Absolute", "both", "complexity", "functionality", "Directly", "Early size metric", "Empirically", "indirectly", "interval", "Length", "late size metric", "media", "none", "Nominal", "nonspecific", "ordinal", "other", "Problem oriented metric", "program/script", "ratio", "solution oriented metric", "Specific", "theoretically", "Web application", "Web hypermedia application", "Web software application"}
-Usman = {"Analysis", "all", "analogy", "availability", "bidding", "Close Onshore", "Co-located", "Communications industry", "Considered", "crystal", "customized XP", "customized scrum", "daily", "design", "distribution", "education", "expert judgement", "DSDM", "Distant Onshore", "Estimate value(s)", "FDD", "Far Offshore", "financial", "function points", "Hours/days", "health", "ideal hours", "implementation", "kanban", "maintainability", "maintenance", "manufacturing", "MMRE", "MdMRE", "Near Offshore", "No. of team members", "not applicable", "not considered", "not used", "Other", "Performance", "Planning poker", "Point", "pair days", "Release", "reliability", "retail/wholesale", "Single", "scrum", "security", "sprint", "Story points", "testing", "three point", "task", "transportation", "UC points", "User story", "Value", "XP"}
+Bajta = {'Conceptualization', 'Feasibility study', 'Preliminary planning', 'Detail Planning', 'Execution', 'Commissioning', 'System investigation', 'Analysis', 'Design', 'Implementation', 'Testing', 'Maintenance', 'Other', 'SE', 'Research & Dev', 'Telecommunication', 'Finance', 'Healthcare', 'Other', 'Close onshore', 'Distant onshore', 'Near offshore', 'Far offshore', 'Constructive Cost Model', 'Capability Maturity Model Integration', 'Agile', 'Delphi', 'GA', 'CBR', 'Fuzzy similar', 'Other', 'Value', 'No of team members', 'Expert judgment', 'Machine learning', 'Non-machine learning', 'Individual', 'Group-based estimation', 'Estimate value', 'Value', 'Effort hours', 'Staff/cost', 'Hardware', 'Risk', 'Portfolio', 'Baseline comparison', 'Variation reduction', 'Sensitivity analysis', 'Size report', 'Statistics analysis', 'Considered', 'Not considered', 'Considered', 'Not Considered', 'Performance', 'Security', 'Availability', 'Reliability', 'Maintainability', 'Other', 'Geographical distance', 'Temporal distance', 'Socio-cultural distance'}
+Britto_2017 = {'Web page count', 'Media count', 'New media count', 'New Web page count', 'Link count', 'Program count', 'Reused component count', 'Lines of code', 'Reused program count', 'Reused media count', 'Web page allocation', 'Reused lines of code', 'Media allocation', 'Reused media allocation', 'Entity count', 'Attribute count', 'Component count', 'Statement count', 'Node count', 'Collection slot size', 'Component granularity level', 'Slot granularity level', 'Model node size', 'Cluster node size', 'Node slot size', 'Publishing model unit count', 'Model slot size', 'Association slot size', 'Client script count', 'Server script count', 'Information slot count', 'Association center slot count', 'Collection center slot count', 'Component slot count', 'Semantic association count', 'Segment count', 'Slot count', 'Cluster slot count', 'Cluster count', 'Publishing unit count', 'Section count', 'Inner/sub concern count', 'Indifferent concern count', 'Module point cut count', 'Module count', 'Module attribute count', 'Operation count', 'Comment count', 'Reused comment count', 'Media duration', 'Diffusion cut count', 'Concern module count', 'Concern operation count', 'Anchor count', 'High feature count', 'Low feature count', 'Reused high feature count', 'Reused low feature count', 'Web objects', 'Common Software Measurement International Consortium', 'International Function Point Users Group', 'Object-Oriented Heuristic Function Points', 'Object-Oriented Function Points', 'Use case count', 'Feature count', 'Data Web points', 'Cohesion', 'Class coupling', 'Concern coupling', 'Connectivity density', 'Cyclomatic complexity', 'Model collection complexity', 'Model association complexity', 'Model link complexity', 'Page complexity', 'Component complexity', 'Total complexity', 'Adaptation complexity', 'New complexity', 'Data usage complexity', 'Data flow complexity', 'Cohesion complexity', 'Interface complexity', 'Control flow complexity', 'Class complexity', 'Layout complexity', 'Input complexity', 'Output complexity', 'Product.Type', 'Stratum', 'Compactness', 'Product.Structure', 'Architecture', 'Integration with legacy systems', 'Concurrency level', 'Processing requirements', 'Database size', 'Requirements volatility level', 'Requirements novelty level', 'Reliability level', 'Maintainability level', 'Time efficiency level', 'Memory efficiency level', 'Portability level', 'Scalability level', 'Quality level', 'Usability level', 'Readability level', 'Security level', 'Installability level', 'Modularity level', 'Flexibility level', 'Testability level', 'Accessibility level', 'Trainability level', 'Innovation level', 'Technical factors', 'Storage constraint', 'Reusability level', 'Robustness level', 'Design volatility', 'Product.Experience level', 'Requirements clarity level', 'Availability level', 'IT literacy', 'Mapped workflows', 'Personality', 'SPI program', 'Metrics program', 'Number of projects in parallel', 'Software reuse', 'Documentation level', 'Number of programming languages', 'Project.Type', 'Process efficiency level', 'Project management level', 'Project.Infrastructure', 'Development restriction', 'Time restriction', 'Risk level', 'Rapid app development', 'Operational mode', 'Resource level', 'Lessons learned repository', 'Domain experience level', 'Team size', 'Deployment platform experience level', 'Team capability', 'Programming language experience level', 'Tool experience level', 'Communication level', 'Software development experience', 'Work Team level', 'Stability level', 'Motivation level', 'Focus factor', 'OO experience level', 'In-house experience', 'Authoring tool type', 'Productivity level', 'Novelty level', 'Platform volatility level', 'Difficulty level', 'Platform support level'}
+Britto_2016 = {'Site.Location', 'Site.Legal Entity', 'Site.Geographic Distance', 'Site.Temporal Distance', 'Early', 'Early & Late', 'Late', 'Estimator', 'Estimator & Provider', 'Provider', 'Relationship.Location', 'Relationship.Legal Entity', 'Relationship.Geographic Distance', 'Relationship.Temporal Distance', 'Centralized', 'Distributed', 'Semi-distributed'}
+Dasthi = {'Constructive Cost Model', 'Software Life Cycle Management', 'Software Evaluation and Estimation for Risk', 'Expert Judgment', 'Analogy-Based', 'Basic-Combination', 'Fuzzy Logic', 'Artificial Neural Networks', 'Computational Intelligence.swarm', 'Computational Intelligence.evolutionary', 'AI-Combined hybrid'}
+Mendes = {'Motivation', 'Early size metric', 'Late size metric', 'Problem-oriented metric', 'Solution-oriented metric', 'Class.Length', 'Functionality', 'Complexity', 'Web hypermedia application', 'Web software application', 'Web application', 'Media', 'Program/Script', 'Nominal', 'Ordinal', 'Interval', 'Ratio', 'Absolute', 'Computation.Direct', 'Computation.Indirect', 'Validated Empirically', 'Validated Theoretically', 'Validation.Both', 'Validation.None', 'Model dependency.Specific', 'Model dependency.Nonspecific'}
+Usman = {'Release', 'Sprint', 'Daily', 'Bidding', 'Analysis', 'Design', 'Implementation', 'Testing', 'Maintenance', 'Estimated activities.All', 'Extreme Programming', 'Scrum', 'Customized Extreme Programming', 'Customized Scrum', 'Dynamic Systems Development Method', 'Crystal', 'Feature-Driven Development', 'Kanban', 'Communications industry', 'Transportation', 'Financial', 'Education', 'Health', 'Retail/Wholesale', 'Manufacturing', 'Government/Military', 'Project domain.Other', 'Co-located', 'Distributed: Close Onshore', 'Distributed: Distant Onshore', 'Distributed: Near Offshore', 'Distributed: Far Offshore', 'User story', 'Task', 'Use case', 'Estimation entity.Other', 'Number of entities estimated.Value', 'No. of team members', 'Planning Poker', 'Expert Judgement', 'Analogy', 'Use case points method', 'Estimation Techniques.Other', 'Single', 'Group', 'Story points', 'User case points', 'Function points', 'Size.Other', 'Not used', 'Considered without any metric', 'Considered', 'Not Considered', 'Considered', 'Not Considered', 'Performance', 'Security', 'Availability', 'Reliability', 'Maintainability', 'Non functional requirements.Other', 'Not considered', 'Considered', 'Not Considered', 'Not applicable', 'Considered', 'Not Considered', 'Estimate value(s)', 'Actual effort.Value', 'Point', 'Three point', 'Distribution', 'Effort estimate.Type.Other', 'Hours/days', 'Pair days', 'Ideal hours', 'Unit.Other', 'Accuracy Level.Value', 'Mean Magnitude of Relative Error', 'Median Magnitude of Relative Error', 'Bias of Relative Error', 'Accuracy measure.Other', 'Not used'}
 
 # Combine the sets into a dictionary
 sets = {
@@ -1937,23 +1942,32 @@ plt.style.use('seaborn-v0_8-whitegrid')  # You can change this to any available 
 
 plt.rcParams['font.family'] = 'serif'
 
-# Define the sets of words
-Bajta = {"Agile", "Analysis", "Availability", "Baseline comparison", "Bidding", "CBR", "CMMI", "COCOMO", "Commissioning", "Conceptualization", "Delphi", "Detail planning", "Design", "Distant onshore", "Expert judgment", "Estimated value", "Execution", "Effort hours", "Feasibility study", "Finance", "Fuzzy similarity", "GA", "Group-based estimation", "Healthcare", "Hardware", "Implementation", "Individual", "Machine learning", "Maintainability", "Maintenance", "Near offshore", "Non-machine learning", "Not considered", "Number of team members", "Performance", "Portfolio", "Preliminary planning", "Reliability", "Research & development", "Risk", "Security", "Sensitivity analysis", "Size report", "Socio-cultural distance", "Statistical analysis", "Staff/cost", "System investigation", "Temporal distance", "Testing", "Value", "Variation reduction"}
-Britto_2017 = {"Accessibility level", "Adaptation complexity", "Anchor count", "Architecture", "Association center slot count", "Association slot size", "Attribute count", "Authoring tool type", "Availability level", "Class complexity", "Class coupling", "Client script count", "Cluster count", "Cluster node size", "Cluster slot count", "Cohesion", "Cohesion complexity", "Collection center slot count", "Collection slot size", "Comment count", "Communication level", "Compactness", "Component complexity", "Component count", "Component granularity level", "Component slot count", "Concern coupling", "Concern module count", "Concern operation count", "Concurrency level", "Connectivity density", "Control flow complexity", "Cyclomatic complexity", "Data Web points", "Data flow complexity", "Data usage complexity", "Database size", "Deployment platform experience level", "Design volatility", "Development restriction", "Difficulty level", "Diffusion cut count", "Documentation level", "Domain experience level", "Entity count", "Experience level", "Feature count", "Flexibility level", "Focus factor", "High feature count", "IT literacy", "In-house experience", "Indifferent concern count", "Information slot count", "Infrastructure", "Inner/sub concern count", "Innovation level", "Input complexity", "Installability level", "Integration with legacy systems", "Interface complexity", "International Function Point Users Group", "Layout complexity", "Lessons learned repository", "Lines of code", "Link count", "Low feature count", "Maintainability level", "Mapped workflows", "Media allocation", "Media count", "Media duration", "Memory efficiency level", "Metrics program", "Model association complexity", "Model collection complexity", "Model link complexity", "Model node size", "Model slot size", "Modularity level", "Module attribute count", "Module count", "Module point cut count", "Motivation level", "New Web page count", "New complexity", "New media count", "Node count", "Node slot size", "Novelty level", "Number of programming languages", "Number of projects in parallel", "OO experience level", "Object-Oriented Function Points", "Operation count", "Operational mode", "Output complexity", "Page complexity", "Personality", "Platform support level", "Platform volatility level", "Portability level", "Process efficiency level", "Processing requirements", "Productivity level", "Program count", "Programming language experience level", "Project management level", "Publishing model unit count", "Publishing unit count", "Quality level", "Rapid app development", "Readability level", "Reliability level", "Requirements clarity level", "Requirements novelty level", "Requirements volatility level", "Resource level", "Reusability level", "Reused comment count", "Reused component count", "Reused high feature count", "Reused lines of code", "Reused low feature count", "Reused media allocation", "Reused media count", "Reused program count", "Risk level", "Robustness level", "SPI program", "Scalability level", "Section count", "Security level", "Segment count", "Semantic association count", "Server script count", "Slot count", "Slot granularity level", "Software development experience", "Software reuse", "Stability level", "Statement count", "Storage constraint", "Structure", "Team capability", "Team size", "Technical factors", "Testability level", "Time efficiency level", "Time restriction", "Tool experience level", "Total complexity", "Trainability level", "Type", "Usability level", "Use case count", "Web objects", "Web page allocation", "Web page count", "Work Team level"}
-Britto_2016 = {"Centralized", "distributed", "Early", "Estimator", "Early & Late", "Estimator & Provider", "geographic distance", "geographic distance", "late", "legal entity", "location", "provider", "semi-distributed", "temporal distance", "temporal distance"}
-Dasthi = {"ANN", "Analogy Base", "COCOMO", "Evolutionary", "Expert Judgment", "FUZZY", "SEER-SEM", "SLIM", "Swarm"}
-Mendes = {"Absolute", "both", "complexity", "functionality", "Directly", "Early size metric", "Empirically", "indirectly", "interval", "Length", "late size metric", "media", "none", "Nominal", "nonspecific", "ordinal", "other", "Problem oriented metric", "program/script", "ratio", "solution oriented metric", "Specific", "theoretically", "Web application", "Web hypermedia application", "Web software application"}
-Usman = {"Analysis", "all", "analogy", "availability", "bidding", "Close Onshore", "Co-located", "Communications industry", "Considered", "crystal", "customized XP", "customized scrum", "daily", "design", "distribution", "education", "expert judgement", "DSDM", "Distant Onshore", "Estimate value(s)", "FDD", "Far Offshore", "financial", "function points", "Hours/days", "health", "ideal hours", "implementation", "kanban", "maintainability", "maintenance", "manufacturing", "MMRE", "MdMRE", "Near Offshore", "No. of team members", "not applicable", "not considered", "not used", "Other", "Performance", "Planning poker", "Point", "pair days", "Release", "reliability", "retail/wholesale", "Single", "scrum", "security", "sprint", "Story points", "testing", "three point", "task", "transportation", "UC points", "User story", "Value", "XP"}
+# Define the sets of words (characteristics)
+Bajta = {'Conceptualization', 'Feasibility study', 'Preliminary planning', 'Detail Planning', 'Execution', 'Commissioning', 'System investigation', 'Analysis', 'Design', 'Implementation', 'Testing', 'Maintenance', 'Other', 'SE', 'Telecommunication', 'Finance', 'Healthcare', 'Other', 'Close onshore', 'Distant onshore', 'Near offshore', 'Far offshore', 'Constructive Cost Model', 'Capability Maturity Model Integration', 'Agile', 'Delphi', 'GA', 'CBR', 'Fuzzy similar', 'Other', 'Value', 'No of team members', 'Expert judgment', 'Machine learning', 'Non-machine learning', 'Individual', 'Group-based estimation', 'Estimate value', 'Value', 'Effort hours', 'Staff/cost', 'Hardware', 'Risk', 'Portfolio', 'Baseline comparison', 'Variation reduction', 'Sensitivity analysis', 'Size report', 'Statistics analysis', 'Considered', 'Not considered', 'Considered', 'Not Considered', 'Performance', 'Security', 'Availability', 'Reliability', 'Maintainability', 'Other', 'Geographical distance', 'Temporal distance', 'Socio-cultural distance'}
+Britto_2017 = {'Web page count', 'Media count', 'New media count', 'New Web page count', 'Link count', 'Program count', 'Reused component count', 'Lines of code', 'Reused program count', 'Reused media count', 'Web page allocation', 'Reused lines of code', 'Media allocation', 'Reused media allocation', 'Entity count', 'Attribute count', 'Component count', 'Statement count', 'Node count', 'Collection slot size', 'Component granularity level', 'Slot granularity level', 'Model node size', 'Cluster node size', 'Node slot size', 'Publishing model unit count', 'Model slot size', 'Association slot size', 'Client script count', 'Server script count', 'Information slot count', 'Association center slot count', 'Collection center slot count', 'Component slot count', 'Semantic association count', 'Segment count', 'Slot count', 'Cluster slot count', 'Cluster count', 'Publishing unit count', 'Section count', 'Inner/sub concern count', 'Indifferent concern count', 'Module point cut count', 'Module count', 'Module attribute count', 'Operation count', 'Comment count', 'Reused comment count', 'Media duration', 'Diffusion cut count', 'Concern module count', 'Concern operation count', 'Anchor count', 'High feature count', 'Low feature count', 'Reused high feature count', 'Reused low feature count', 'Web objects', 'Common Software Measurement International Consortium', 'International Function Point Users Group', 'Object-Oriented Heuristic Function Points', 'Object-Oriented Function Points', 'Use case count', 'Feature count', 'Data Web points', 'Cohesion', 'Class coupling', 'Concern coupling', 'Connectivity density', 'Cyclomatic complexity', 'Model collection complexity', 'Model association complexity', 'Model link complexity', 'Page complexity', 'Component complexity', 'Total complexity', 'Adaptation complexity', 'New complexity', 'Data usage complexity', 'Data flow complexity', 'Cohesion complexity', 'Interface complexity', 'Control flow complexity', 'Class complexity', 'Layout complexity', 'Input complexity', 'Output complexity', 'Product.Type', 'Stratum', 'Compactness', 'Product.Structure', 'Architecture', 'Integration with legacy systems', 'Concurrency level', 'Processing requirements', 'Database size', 'Requirements volatility level', 'Requirements novelty level', 'Reliability level', 'Maintainability level', 'Time efficiency level', 'Memory efficiency level', 'Portability level', 'Scalability level', 'Quality level', 'Usability level', 'Readability level', 'Security level', 'Installability level', 'Modularity level', 'Flexibility level', 'Testability level', 'Accessibility level', 'Trainability level', 'Innovation level', 'Technical factors', 'Storage constraint', 'Reusability level', 'Robustness level', 'Design volatility', 'Product.Experience level', 'Requirements clarity level', 'Availability level', 'IT literacy', 'Mapped workflows', 'Personality', 'SPI program', 'Metrics program', 'Number of projects in parallel', 'Software reuse', 'Documentation level', 'Number of programming languages', 'Project.Type', 'Process efficiency level', 'Project management level', 'Project.Infrastructure', 'Development restriction', 'Time restriction', 'Risk level', 'Rapid app development', 'Operational mode', 'Resource level', 'Lessons learned repository', 'Domain experience level', 'Team size', 'Deployment platform experience level', 'Team capability', 'Programming language experience level', 'Tool experience level', 'Communication level', 'Software development experience', 'Work Team level', 'Stability level', 'Motivation level', 'Focus factor', 'OO experience level', 'In-house experience', 'Authoring tool type', 'Productivity level', 'Novelty level', 'Platform volatility level', 'Difficulty level', 'Platform support level'}
+Britto_2016 = {'Site.Location', 'Site.Legal Entity', 'Site.Geographic Distance', 'Site.Temporal Distance', 'Early', 'Early & Late', 'Late', 'Estimator', 'Estimator & Provider', 'Provider', 'Relationship.Location', 'Relationship.Legal Entity', 'Relationship.Geographic Distance', 'Relationship.Temporal Distance', 'Centralized', 'Distributed', 'Semi-distributed'}
+Dasthi = {'Constructive Cost Model', 'Software Life Cycle Management', 'Software Evaluation and Estimation for Risk', 'Expert Judgment', 'Analogy-Based', 'Basic-Combination', 'Fuzzy Logic', 'Artificial Neural Networks', 'Computational Intelligence.swarm', 'Computational Intelligence.evolutionary', 'AI-Combined hybrid'}
+Mendes = {'Motivation', 'Early size metric', 'Late size metric', 'Problem-oriented metric', 'Solution-oriented metric', 'Class.Length', 'Functionality', 'Complexity', 'Web hypermedia application', 'Web software application', 'Web application', 'Media', 'Program/Script', 'Nominal', 'Ordinal', 'Interval', 'Ratio', 'Absolute', 'Computation.Direct', 'Computation.Indirect', 'Validated Empirically', 'Validated Theoretically', 'Validation.Both', 'Validation.None', 'Model dependency.Specific', 'Model dependency.Nonspecific'}
+Usman = {'Release', 'Sprint', 'Daily', 'Bidding', 'Analysis', 'Design', 'Implementation', 'Testing', 'Maintenance', 'Estimated activities.All', 'Extreme Programming', 'Scrum', 'Customized Extreme Programming', 'Customized Scrum', 'Dynamic Systems Development Method', 'Crystal', 'Feature-Driven Development', 'Kanban', 'Communications industry', 'Transportation', 'Financial', 'Education', 'Health', 'Retail/Wholesale', 'Manufacturing', 'Government/Military', 'Project domain.Other', 'Co-located', 'Distributed: Close Onshore', 'Distributed: Distant Onshore', 'Distributed: Near Offshore', 'Distributed: Far Offshore', 'User story', 'Task', 'Use case', 'Estimation entity.Other', 'Number of entities estimated.Value', 'No. of team members', 'Planning Poker', 'Expert Judgement', 'Analogy', 'Use case points method', 'Estimation Techniques.Other', 'Single', 'Group', 'Story points', 'User case points', 'Function points', 'Size.Other', 'Not used', 'Considered without any metric', 'Considered', 'Not Considered', 'Considered', 'Not Considered', 'Performance', 'Security', 'Availability', 'Reliability', 'Maintainability', 'Non functional requirements.Other', 'Not considered', 'Considered', 'Not Considered', 'Not applicable', 'Considered', 'Not Considered', 'Estimate value(s)', 'Actual effort.Value', 'Point', 'Three point', 'Distribution', 'Effort estimate.Type.Other', 'Hours/days', 'Pair days', 'Ideal hours', 'Unit.Other', 'Accuracy Level.Value', 'Mean Magnitude of Relative Error', 'Median Magnitude of Relative Error', 'Bias of Relative Error', 'Accuracy measure.Other', 'Not used'}
 
-# Create a dictionary to store the sets
-sets = {
-    "Bajta": Bajta,
-    "Britto_2016": Britto_2016,
-    "Britto_2017": Britto_2017,
-    "Dasthi": Dasthi,
-    "Mendes": Mendes,
-    "Usman": Usman
-}
+
+# # Define the sets of words (categories)
+# Bajta = {"Cost estimation context", "Estimation technique", "Cost estimate", "Cost estimators", "Planning", "Project activities", "Project domain", "Project setting", "Planning approaches", "Number of sites", "Team size", "Estimation technique", "Use technique", "Estimated cost", "Actual cost", "Estimation dimension", "Accuracy measure", "Product size", "Team experience", "Team structure", "Product requirement", "Distributed teams distances"}
+# Britto_2017 = {"Size Metric", "Cost Driver", "Length", "Functionality", "Object-oriented", "Complexity", "Product", "Client", "Development Company", "Project", "Team", "Technology"}
+# Britto_2016 = {"Project", "Setting site", "Setting relationship", "Estimation stage", "Estimation process architectural model"}
+# Dasthi = {"Basic Estimating Methods", "Combined Estimating Methods", "Algorithmic", "Non-Algorithmic", "AI-Combination"}
+# Mendes = {"Motivation", "Harvesting time", "Metric foundation", "Class", "Entity", "Measurement Scale", "Computation", "Validation", "Model dependency"}
+# Usman = {"Estimation context", "Estimation technique", "Effort predictors", "Effort estimate", "Planning level", "Estimated activities", "Agile methods", "Project domain", "Project setting", "Estimation entity", "Number of entities estimated", "Team size", "Type", "Size", "Team's prior experience", "Team's skill level", "Non-functional requirements", "Distributed teams' issues", "Customer Communication", "Estimated effort", "Actual effort", "Type", "Unit", "Accuracy Level", "Accuracy measure"}
+# 
+# # Create a dictionary to store the sets
+# sets = {
+#     "Bajta": Bajta,
+#     "Britto_2016": Britto_2016,
+#     "Britto_2017": Britto_2017,
+#     "Dasthi": Dasthi,
+#     "Mendes": Mendes,
+#     "Usman": Usman
+# }
 
 # Load the pre-trained model and tokenizer
 model_name = "jinaai/jina-embeddings-v3"
@@ -2021,7 +2035,7 @@ for (set1, set2), sim_matrix in similarity_results.items():
 similarity_df = pd.DataFrame(similarity_table)
 
 # Filter the DataFrame to keep only cosine similarities above 0.7
-similarity_df_filtered = similarity_df[similarity_df['Cosine Similarity'] > 0.8]
+similarity_df_filtered = similarity_df[similarity_df['Cosine Similarity'] > 0.7]
 
 # Create an empty table to store the words that are similar
 common_words_table = pd.DataFrame(index=sets.keys(), columns=sets.keys(), dtype=object)
@@ -2339,7 +2353,7 @@ plt.figure(figsize=(12, 8))
 ax = sns.barplot(x="Set 1", y="Shared Word Count", hue="Set 2", data=count_table_full, palette="Set2", width=0.8, dodge=True)
 
 # Title and labels
-plt.title("Barplot of Similar Words Between Literature Sets")
+plt.title("Barplot of Similar Words Between Literature Sets (Upper 70% similarity threshold")
 plt.xlabel("Number of Similar Words")
 plt.ylabel("Literature")
 
@@ -2523,7 +2537,7 @@ wb.save("similarity_results_colored.xlsx")
 ```
 
 
-#Trying to collapse the excel
+# Trying to collapse the excel
 
 ```{python}
 import pandas as pd
@@ -2757,50 +2771,617 @@ styled_similarity_df.to_html('similarity_table.html')
 
 ```{python, eval=FALSE}
 import pandas as pd
-import time
-from scholarly import scholarly
-from scholarly._proxy_generator import MaxTriesExceededException
-from tqdm import tqdm
+from collections import defaultdict
 
-# Function to extract the required information from the search results
-def extract_info(search_query, titles, abstracts):
-    try:
-        for result in tqdm(search_query, desc="Fetching papers", unit="paper"):
-            titles.append(result['bib']['title'])
-            abstracts.append(result['bib'].get('abstract', 'N/A'))
-    except MaxTriesExceededException as e:
-        print(f"Error fetching data: {e}")
-
-# Initialize lists to store data
-titles = []
-abstracts = []
-
-# Search for the combined terms "Taxonomy" and "Effort Estimation"
-print('Software Project Management", "Generative AI", "Gen AI""...')
-extract_info(scholarly.search_pubs('("Software Project Management" OR "project management" OR "software projects" OR "software development management" OR "SPM" OR "software engineering management" OR "IT project management" OR "agile project management" OR "scrum project management" OR "devops project management" OR "SDLC" OR "software engineering process" OR "Agile Software Development" OR "Software Engineering") AND ("Large Language Models" OR "LLMs" OR "Generative AI" OR "GenAI" OR "foundation models" OR "AI-powered tools" OR "AI in project management" OR "natural language models" OR "transformer-based models" OR "GPT" OR "ChatGPT" OR "GPT-4" OR "Claude" OR "Bard" OR "BERT" OR "language models" OR "AI assistants" OR "AI chatbots" OR "AI models" OR "machine learning models" OR "Generative Artificial Intelligence" OR "Natural Language Processing" OR "Reinforcement Learning" OR "Machine Learning" OR "Deep Learning" OR "AI Agents" OR "AI copilots" OR "AI-based systems" OR "intelligent assistants" OR "AI-powered project tools") AND ("task automation" OR "project performance" OR "productivity" OR "communication" OR "information retrieval" OR "quality assessment" OR "benefits" OR "challenges" OR "limitations" OR "performance metrics" OR "efficiency" OR "decision support" OR "collaboration" OR "risk management" OR "time estimation" OR "cost estimation" OR "task planning" OR "AI evaluation" OR "model performance" OR "accuracy" OR "effectiveness" OR "usability" OR "project success" OR "Structural Equation Modeling" OR "Appropriation Theory" OR "Task-Technology Fit" OR "Data Integration" OR "Context Awareness" OR "Risk Assessment" OR "Resource Allocation" OR "Automation" OR "Human-AI Collaboration")'), titles, abstracts)
-
-
-
-# Ensure all lists have the same length by padding them with 'N/A'
-max_len = max(len(titles), len(abstracts))
-
-titles += ['N/A'] * (max_len - len(titles))
-abstracts += ['N/A'] * (max_len - len(abstracts))
-
-# Create a DataFrame
-data = {
-    'Title': titles,
-    'Abstract': abstracts,
+# Define the color map for sets
+set_colors = {
+    "Bajta": "yellow",
+    "Britto_2016": "blue",
+    "Britto_2017": "green",
+    "Dasthi": "red",
+    "Mendes": "purple",
+    "Usman": "orange"
 }
-df = pd.DataFrame(data)
-len(df)
 
-# Remove duplicates if any
-df = df.drop_duplicates()
-len(df)
+# Initialize a dictionary to store words grouped by similarity
+grouped_words = defaultdict(set)
+
+# Iterate over the similarity dataframe
+for index, row in similarity_df_filtered.iterrows():
+    if row['Cosine Similarity'] >= 0.9:
+        word1 = row['Word 1']
+        word2 = row['Word 2']
+        set1 = row['Set 1']
+        set2 = row['Set 2']
+        
+        # Add words to the grouped dictionary with their respective sets
+        grouped_words[word1].add(set1)
+        grouped_words[word2].add(set2)
+
+# Prepare the data for the final table
+table_rows = []
+for word, sets in grouped_words.items():
+    # Color the words based on the sets they belong to
+    color_coded_words = []
+    for set_name in sets:
+        # Assign the color based on the set
+        color = set_colors[set_name]
+        colored_word = f'<span style="color:{color}">{word}</span>'
+        color_coded_words.append(colored_word)
+    
+    # Prepare the row for this word and its sets
+    sets_str = ", ".join([f'<span style="color:{set_colors[set_name]}">{set_name}</span>' for set_name in sets])
+    table_rows.append({
+        "Words": ", ".join(color_coded_words),  # Join words with their color applied
+        "Sets": sets_str  # Color-coded sets
+    })
+
+# Convert to a DataFrame
+final_table = pd.DataFrame(table_rows)
+
+# Collapse the table by the "Sets" column, merging words that have the same "Sets"
+collapsed_table = final_table.groupby('Sets', as_index=False).agg({
+    'Words': ', '.join  # Join all words with the same set
+})
+
+# Display the collapsed table with HTML rendering
+collapsed_html_output = collapsed_table.to_html(escape=False)  # escape=False allows HTML in the table
+
+# Save the collapsed HTML output to a file
+collapsed_file_path = 'collapsed_grouped_words_table_colored_new.html'
+with open(collapsed_file_path, 'w') as file:
+    file.write(collapsed_html_output)
+
+print(f"Collapsed styled table saved to {collapsed_file_path}")
 
 
-file_path = 'C:/Users/mysit/Desktop/Job/Papers/genaiscrap2.xlsx'
-df.to_excel(file_path, index=False)
+
+#########
+
+import pandas as pd
+from collections import defaultdict
+
+# Define the color map for sets
+set_colors = {
+    "Bajta": "yellow",
+    "Britto_2016": "blue",
+    "Britto_2017": "green",
+    "Dasthi": "red",
+    "Mendes": "purple",
+    "Usman": "orange"
+}
+
+# Initialize a dictionary to store words grouped by similarity
+grouped_words = defaultdict(set)
+
+# Iterate over the similarity dataframe
+for index, row in similarity_df_filtered.iterrows():
+    if row['Cosine Similarity'] >= 0.9:
+        word1 = row['Word 1']
+        word2 = row['Word 2']
+        set1 = row['Set 1']
+        set2 = row['Set 2']
+        
+        # Add words to the grouped dictionary with their respective sets
+        grouped_words[word1].add(set1)
+        grouped_words[word2].add(set2)
+
+# Prepare the data for the final table
+table_rows = []
+for word, sets in grouped_words.items():
+    # Color the words based on the sets they belong to
+    color_coded_words = []
+    for set_name in sets:
+        # Assign the color based on the set
+        color = set_colors[set_name]
+        colored_word = f'<span style="color:{color}">{word}</span>'
+        color_coded_words.append(colored_word)
+    
+    # Prepare the row for this word and its sets
+    sets_str = ", ".join([f'<span style="color:{set_colors[set_name]}">{set_name}</span>' for set_name in sets])
+    table_rows.append({
+        "Words": ", ".join(color_coded_words),  # Join words with their color applied
+        "Sets": sets_str  # Color-coded sets
+    })
+
+# Convert to a DataFrame
+final_table = pd.DataFrame(table_rows)
+
+# Collapse the table by the "Sets" column, merging words that have the same "Sets"
+collapsed_table = final_table.groupby('Sets', as_index=False).agg({
+    'Words': ', '.join  # Join all words with the same set
+})
+
+# Display the collapsed table with HTML rendering
+collapsed_html_output = collapsed_table.to_html(escape=False)  # escape=False allows HTML in the table
+
+# Save the collapsed HTML output to a file
+collapsed_file_path = 'collapsed_grouped_words_table_colored_new.html'
+with open(collapsed_file_path, 'w') as file:
+    file.write(collapsed_html_output)
+
+print(f"Collapsed styled table saved to {collapsed_file_path}")
+
+```
+
+
+
+# How many differences (not counting duplicates)
+```{python}
+import torch
+from transformers import AutoModel, AutoTokenizer
+import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+# Define the taxonomy characteristics
+Bajta = {'Conceptualization', 'Feasibility study', 'Preliminary planning', 'Detail Planning', 'Execution', 'Commissioning', 'System investigation', 'Analysis', 'Design', 'Implementation', 'Testing', 'Maintenance', 'Other', 'SE', 'Research & Dev', 'Telecommunication', 'Finance', 'Healthcare', 'Other', 'Close onshore', 'Distant onshore', 'Near offshore', 'Far offshore', 'Constructive Cost Model', 'Capability Maturity Model Integration', 'Agile', 'Delphi', 'GA', 'CBR', 'Fuzzy similar', 'Other', 'Value', 'No of team members', 'Expert judgment', 'Machine learning', 'Non-machine learning', 'Individual', 'Group-based estimation', 'Estimate value', 'Value', 'Effort hours', 'Staff/cost', 'Hardware', 'Risk', 'Portfolio', 'Baseline comparison', 'Variation reduction', 'Sensitivity analysis', 'Size report', 'Statistics analysis', 'Considered', 'Not considered', 'Considered', 'Not Considered', 'Performance', 'Security', 'Availability', 'Reliability', 'Maintainability', 'Other', 'Geographical distance', 'Temporal distance', 'Socio-cultural distance'}
+Britto_2017 = {'Web page count', 'Media count', 'New media count', 'New Web page count', 'Link count', 'Program count', 'Reused component count', 'Lines of code', 'Reused program count', 'Reused media count', 'Web page allocation', 'Reused lines of code', 'Media allocation', 'Reused media allocation', 'Entity count', 'Attribute count', 'Component count', 'Statement count', 'Node count', 'Collection slot size', 'Component granularity level', 'Slot granularity level', 'Model node size', 'Cluster node size', 'Node slot size', 'Publishing model unit count', 'Model slot size', 'Association slot size', 'Client script count', 'Server script count', 'Information slot count', 'Association center slot count', 'Collection center slot count', 'Component slot count', 'Semantic association count', 'Segment count', 'Slot count', 'Cluster slot count', 'Cluster count', 'Publishing unit count', 'Section count', 'Inner/sub concern count', 'Indifferent concern count', 'Module point cut count', 'Module count', 'Module attribute count', 'Operation count', 'Comment count', 'Reused comment count', 'Media duration', 'Diffusion cut count', 'Concern module count', 'Concern operation count', 'Anchor count', 'High feature count', 'Low feature count', 'Reused high feature count', 'Reused low feature count', 'Web objects', 'Common Software Measurement International Consortium', 'International Function Point Users Group', 'Object-Oriented Heuristic Function Points', 'Object-Oriented Function Points', 'Use case count', 'Feature count', 'Data Web points', 'Cohesion', 'Class coupling', 'Concern coupling', 'Connectivity density', 'Cyclomatic complexity', 'Model collection complexity', 'Model association complexity', 'Model link complexity', 'Page complexity', 'Component complexity', 'Total complexity', 'Adaptation complexity', 'New complexity', 'Data usage complexity', 'Data flow complexity', 'Cohesion complexity', 'Interface complexity', 'Control flow complexity', 'Class complexity', 'Layout complexity', 'Input complexity', 'Output complexity', 'Product.Type', 'Stratum', 'Compactness', 'Product.Structure', 'Architecture', 'Integration with legacy systems', 'Concurrency level', 'Processing requirements', 'Database size', 'Requirements volatility level', 'Requirements novelty level', 'Reliability level', 'Maintainability level', 'Time efficiency level', 'Memory efficiency level', 'Portability level', 'Scalability level', 'Quality level', 'Usability level', 'Readability level', 'Security level', 'Installability level', 'Modularity level', 'Flexibility level', 'Testability level', 'Accessibility level', 'Trainability level', 'Innovation level', 'Technical factors', 'Storage constraint', 'Reusability level', 'Robustness level', 'Design volatility', 'Product.Experience level', 'Requirements clarity level', 'Availability level', 'IT literacy', 'Mapped workflows', 'Personality', 'SPI program', 'Metrics program', 'Number of projects in parallel', 'Software reuse', 'Documentation level', 'Number of programming languages', 'Project.Type', 'Process efficiency level', 'Project management level', 'Project.Infrastructure', 'Development restriction', 'Time restriction', 'Risk level', 'Rapid app development', 'Operational mode', 'Resource level', 'Lessons learned repository', 'Domain experience level', 'Team size', 'Deployment platform experience level', 'Team capability', 'Programming language experience level', 'Tool experience level', 'Communication level', 'Software development experience', 'Work Team level', 'Stability level', 'Motivation level', 'Focus factor', 'OO experience level', 'In-house experience', 'Authoring tool type', 'Productivity level', 'Novelty level', 'Platform volatility level', 'Difficulty level', 'Platform support level'}
+Britto_2016 = {'Site.Location', 'Site.Legal Entity', 'Site.Geographic Distance', 'Site.Temporal Distance', 'Early', 'Early & Late', 'Late', 'Estimator', 'Estimator & Provider', 'Provider', 'Relationship.Location', 'Relationship.Legal Entity', 'Relationship.Geographic Distance', 'Relationship.Temporal Distance', 'Centralized', 'Distributed', 'Semi-distributed'}
+Dasthi = {'Constructive Cost Model', 'Software Life Cycle Management', 'Software Evaluation and Estimation for Risk', 'Expert Judgment', 'Analogy-Based', 'Basic-Combination', 'Fuzzy Logic', 'Artificial Neural Networks', 'Computational Intelligence.swarm', 'Computational Intelligence.evolutionary', 'AI-Combined hybrid'}
+Mendes = {'Motivation', 'Early size metric', 'Late size metric', 'Problem-oriented metric', 'Solution-oriented metric', 'Class.Length', 'Functionality', 'Complexity', 'Web hypermedia application', 'Web software application', 'Web application', 'Media', 'Program/Script', 'Nominal', 'Ordinal', 'Interval', 'Ratio', 'Absolute', 'Computation.Direct', 'Computation.Indirect', 'Validated Empirically', 'Validated Theoretically', 'Validation.Both', 'Validation.None', 'Model dependency.Specific', 'Model dependency.Nonspecific'}
+Usman = {'Release', 'Sprint', 'Daily', 'Bidding', 'Analysis', 'Design', 'Implementation', 'Testing', 'Maintenance', 'Estimated activities.All', 'Extreme Programming', 'Scrum', 'Customized Extreme Programming', 'Customized Scrum', 'Dynamic Systems Development Method', 'Crystal', 'Feature-Driven Development', 'Kanban', 'Communications industry', 'Transportation', 'Financial', 'Education', 'Health', 'Retail/Wholesale', 'Manufacturing', 'Government/Military', 'Project domain.Other', 'Co-located', 'Distributed: Close Onshore', 'Distributed: Distant Onshore', 'Distributed: Near Offshore', 'Distributed: Far Offshore', 'User story', 'Task', 'Use case', 'Estimation entity.Other', 'Number of entities estimated.Value', 'No. of team members', 'Planning Poker', 'Expert Judgement', 'Analogy', 'Use case points method', 'Estimation Techniques.Other', 'Single', 'Group', 'Story points', 'User case points', 'Function points', 'Size.Other', 'Not used', 'Considered without any metric', 'Considered', 'Not Considered', 'Considered', 'Not Considered', 'Performance', 'Security', 'Availability', 'Reliability', 'Maintainability', 'Non functional requirements.Other', 'Not considered', 'Considered', 'Not Considered', 'Not applicable', 'Considered', 'Not Considered', 'Estimate value(s)', 'Actual effort.Value', 'Point', 'Three point', 'Distribution', 'Effort estimate.Type.Other', 'Hours/days', 'Pair days', 'Ideal hours', 'Unit.Other', 'Accuracy Level.Value', 'Mean Magnitude of Relative Error', 'Median Magnitude of Relative Error', 'Bias of Relative Error', 'Accuracy measure.Other', 'Not used'}
+
+taxonomies = {
+    'Bajta': Bajta,
+    'Britto_2017': Britto_2017,
+    'Britto_2016': Britto_2016,
+    'Dasthi': Dasthi,
+    'Mendes': Mendes,
+    'Usman': Usman
+}
+
+
+def load_embedding_model():
+    """Load the Jina AI embeddings model"""
+    print("Loading Jina AI embeddings model...")
+    model_name = "jinaai/jina-embeddings-v3"
+    model = AutoModel.from_pretrained(model_name, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    print("Model loaded successfully!")
+    return model, tokenizer
+
+def get_embedding(word, model, tokenizer):
+    """Get embedding for a single word"""
+    inputs = tokenizer(word, return_tensors="pt", truncation=True, padding=True)
+    with torch.no_grad():
+        outputs = model(**inputs)
+    return outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
+
+def find_unique_characteristics(taxonomies, similarity_threshold=0.9):
+    """
+    Find characteristics that are unique to each taxonomy (not similar to any other taxonomy)
+    
+    Args:
+        taxonomies: Dictionary of taxonomy_name -> set of characteristics
+        similarity_threshold: Minimum similarity to consider characteristics as "shared"
+    
+    Returns:
+        Dictionary with unique characteristics per taxonomy and summary statistics
+    """
+    
+    # Load model
+    model, tokenizer = load_embedding_model()
+    
+    # Normalize all characteristics to lowercase for consistency
+    normalized_taxonomies = {}
+    for name, chars in taxonomies.items():
+        normalized_taxonomies[name] = {char.lower() for char in chars}
+    
+    # Store embeddings for all characteristics
+    all_embeddings = {}
+    print("Generating embeddings for all characteristics...")
+    
+    for taxonomy_name, characteristics in normalized_taxonomies.items():
+        print(f"Processing {taxonomy_name}: {len(characteristics)} characteristics")
+        for char in characteristics:
+            if char not in all_embeddings:  # Avoid recomputing for duplicate characteristics
+                all_embeddings[char] = get_embedding(char, model, tokenizer)
+    
+    print(f"Generated embeddings for {len(all_embeddings)} unique characteristics")
+    
+    # Find unique characteristics for each taxonomy
+    unique_results = {}
+    
+    for target_taxonomy, target_chars in normalized_taxonomies.items():
+        print(f"\nAnalyzing unique characteristics for {target_taxonomy}...")
+        unique_chars = []
+        
+        for char in target_chars:
+            is_unique = True
+            char_embedding = all_embeddings[char].reshape(1, -1)
+            
+            # Check similarity with characteristics from all other taxonomies
+            for other_taxonomy, other_chars in normalized_taxonomies.items():
+                if other_taxonomy == target_taxonomy:
+                    continue
+                
+                for other_char in other_chars:
+                    if char == other_char:  # Exact match
+                        is_unique = False
+                        break
+                    
+                    other_embedding = all_embeddings[other_char].reshape(1, -1)
+                    similarity = cosine_similarity(char_embedding, other_embedding)[0][0]
+                    
+                    if similarity >= similarity_threshold:
+                        is_unique = False
+                        break
+                
+                if not is_unique:
+                    break
+            
+            if is_unique:
+                unique_chars.append(char)
+        
+        unique_results[target_taxonomy] = {
+            'unique_characteristics': unique_chars,
+            'count': len(unique_chars),
+            'total_characteristics': len(target_chars),
+            'percentage_unique': (len(unique_chars) / len(target_chars)) * 100
+        }
+        
+        print(f"{target_taxonomy}: {len(unique_chars)}/{len(target_chars)} unique characteristics ({unique_results[target_taxonomy]['percentage_unique']:.1f}%)")
+    
+    return unique_results
+
+def display_results(unique_results):
+    """Display results in a formatted way"""
+    print("\n" + "="*80)
+    print("UNIQUE CHARACTERISTICS ANALYSIS RESULTS")
+    print("="*80)
+    
+    # Summary table
+    print("\nSUMMARY TABLE:")
+    print("-" * 80)
+    print(f"{'Taxonomy':<15} {'Total Chars':<12} {'Unique Chars':<12} {'% Unique':<10} {'Unique Characteristics'}")
+    print("-" * 80)
+    
+    total_chars = 0
+    total_unique = 0
+    
+    for taxonomy, results in unique_results.items():
+        total_chars += results['total_characteristics']
+        total_unique += results['count']
+        
+        unique_list = ', '.join(results['unique_characteristics'][:3])  # Show first 3
+        if len(results['unique_characteristics']) > 3:
+            unique_list += f", ... (+{len(results['unique_characteristics'])-3} more)"
+        
+        print(f"{taxonomy:<15} {results['total_characteristics']:<12} {results['count']:<12} {results['percentage_unique']:<9.1f}% {unique_list}")
+    
+    print("-" * 80)
+    print(f"{'TOTAL':<15} {total_chars:<12} {total_unique:<12} {(total_unique/total_chars)*100:<9.1f}%")
+    
+    # Detailed breakdown
+    print("\n\nDETAILED BREAKDOWN:")
+    print("="*50)
+    
+    for taxonomy, results in unique_results.items():
+        print(f"\n{taxonomy.upper()} - Unique Characteristics ({results['count']}):")
+        print("-" * 50)
+        if results['unique_characteristics']:
+            for i, char in enumerate(sorted(results['unique_characteristics']), 1):
+                print(f"{i:2d}. {char}")
+        else:
+            print("   No unique characteristics found")
+
+def save_results_to_csv(unique_results, filename="unique_characteristics_analysis.csv"):
+    """Save results to CSV file"""
+    data = []
+    
+    for taxonomy, results in unique_results.items():
+        for char in results['unique_characteristics']:
+            data.append({
+                'Taxonomy': taxonomy,
+                'Unique_Characteristic': char,
+                'Total_Characteristics_in_Taxonomy': results['total_characteristics'],
+                'Total_Unique_in_Taxonomy': results['count'],
+                'Percentage_Unique_in_Taxonomy': results['percentage_unique']
+            })
+    
+    df = pd.DataFrame(data)
+    df.to_csv(filename, index=False)
+    print(f"\nResults saved to {filename}")
+    
+    return df
+
+# Main execution
+if __name__ == "__main__":
+    print("Starting Unique Characteristics Analysis...")
+    print(f"Analyzing {len(taxonomies)} taxonomies with similarity threshold of 90%")
+    
+    # Run the analysis
+    results = find_unique_characteristics(taxonomies, similarity_threshold=0.9)
+    
+    # Display results
+    display_results(results)
+    
+    # Save to CSV
+    df = save_results_to_csv(results)
+    
+    print("\nAnalysis complete!")
+```
+
+
+# Categories/characteristics count
+
+```{python}
+def count_taxonomy_nodes(taxonomy_dict, taxonomy_name=None):
+    """
+    Count inner nodes (categories) and outer nodes (leaves/characteristics) in a taxonomy.
+    
+    Args:
+        taxonomy_dict: Dictionary representing the taxonomy structure
+        taxonomy_name: Optional name for the taxonomy (for display purposes)
+    
+    Returns:
+        Dictionary with counts and detailed breakdown
+    """
+    
+    inner_nodes = []  # Categories (excluding root)
+    outer_nodes = []  # Characteristics/leaves
+    
+    def traverse_taxonomy(node, path=None, is_root=True):
+        """Recursively traverse the taxonomy structure"""
+        if path is None:
+            path = []
+            
+        if isinstance(node, dict):
+            for key, value in node.items():
+                current_path = path + [key]
+                
+                if isinstance(value, dict):
+                    # This key represents a category (inner node)
+                    if not is_root:  # Don't count the root level
+                        inner_nodes.append({
+                            'name': key,
+                            'path': ' -> '.join(current_path),
+                            'depth': len(current_path)
+                        })
+                    
+                    # Recurse into the category
+                    traverse_taxonomy(value, current_path, is_root=False)
+                    
+                elif isinstance(value, str):
+                    # This key represents a characteristic (leaf node)
+                    outer_nodes.append({
+                        'name': key,
+                        'value': value,
+                        'path': ' -> '.join(current_path),
+                        'depth': len(current_path)
+                    })
+    
+    # Start traversal
+    traverse_taxonomy(taxonomy_dict)
+    
+    # Calculate statistics
+    results = {
+        'taxonomy_name': taxonomy_name or 'Unnamed Taxonomy',
+        'inner_nodes': {
+            'count': len(inner_nodes),
+            'details': inner_nodes
+        },
+        'outer_nodes': {
+            'count': len(outer_nodes),
+            'details': outer_nodes
+        },
+        'total_nodes': len(inner_nodes) + len(outer_nodes),
+        'depth_stats': {
+            'max_depth': max([node['depth'] for node in inner_nodes + outer_nodes]) if inner_nodes + outer_nodes else 0,
+            'min_depth': min([node['depth'] for node in inner_nodes + outer_nodes]) if inner_nodes + outer_nodes else 0
+        }
+    }
+    
+    return results
+
+def display_results(results):
+    """Display the counting results in a formatted way"""
+    print("=" * 80)
+    print(f"TAXONOMY NODE ANALYSIS: {results['taxonomy_name']}")
+    print("=" * 80)
+    
+    print(f"\nSUMMARY:")
+    print(f"   Inner Nodes (Categories): {results['inner_nodes']['count']}")
+    print(f"   Outer Nodes (Leaves):     {results['outer_nodes']['count']}")
+    print(f"   Total Nodes:              {results['total_nodes']}")
+    print(f"   Max Depth:                {results['depth_stats']['max_depth']}")
+    print(f"   Min Depth:                {results['depth_stats']['min_depth']}")
+    
+    # Simple lists
+    inner_node_names = [node['name'] for node in results['inner_nodes']['details']]
+    outer_node_names = [node['name'] for node in results['outer_nodes']['details']]
+    
+    print(f"\nINNER NODES LIST ({len(inner_node_names)} total):")
+    print(inner_node_names)
+    
+    print(f"\nOUTER NODES LIST ({len(outer_node_names)} total):")
+    print(outer_node_names)
+    
+
+def analyze_multiple_taxonomies(taxonomies_dict):
+    """Analyze multiple taxonomies and provide comparative results"""
+    all_results = {}
+    
+    print("ANALYZING MULTIPLE TAXONOMIES")
+    print("=" * 80)
+    
+    for name, taxonomy in taxonomies_dict.items():
+        print(f"\nProcessing: {name}")
+        results = count_taxonomy_nodes(taxonomy, name)
+        all_results[name] = results
+        
+        # Brief summary for each
+        print(f"  Inner nodes: {results['inner_nodes']['count']}, "
+              f"Outer nodes: {results['outer_nodes']['count']}, "
+              f"Total: {results['total_nodes']}")
+    
+    print("\n" + "=" * 80)
+    print("COMPARATIVE SUMMARY")
+    print("=" * 80)
+    print(f"{'Taxonomy':<25} {'Inner':<8} {'Outer':<8} {'Total':<8} {'Max Depth':<10}")
+    print("-" * 80)
+    
+    for name, results in all_results.items():
+        print(f"{name:<25} {results['inner_nodes']['count']:<8} "
+              f"{results['outer_nodes']['count']:<8} {results['total_nodes']:<8} "
+              f"{results['depth_stats']['max_depth']:<10}")
+    
+    return all_results
+
+
+new_taxonomy = {
+    'Effort Estimation in ASD': {
+        'Estimation context': {
+            "Planning level": {
+                "Release": "Release",
+                "Sprint": "Sprint",
+                "Daily": "Daily",
+                "Bidding": "Bidding"
+            },
+            "Estimated activities": {
+                "Analysis": "Analysis",
+                "Design": "Design",
+                "Implementation": "Implementation",
+                "Testing": "Testing",
+                "Maintenance": "Maintenance",
+                "Estimated activities.All": "Estimated activities.All"
+            },
+            "Agile methods": {
+                "Extreme Programming": "Extreme Programming",
+                "Scrum": "Scrum",
+                "Customized Extreme Programming": "Customized Extreme Programming",
+                "Customized Scrum": "Customized Scrum",
+                "Dynamic Systems Development Method": "Dynamic Systems Development Method",
+                "Crystal": "Crystal",
+                "Feature-Driven Development": "Feature-Driven Development",
+                "Kanban": "Kanban"
+            },
+            "Project domain": {
+                "Communications industry": "Communications industry",
+                "Transportation": "Transportation",
+                "Financial": "Financial",
+                "Education": "Education",
+                "Health": "Health",
+                "Retail/Wholesale": "Retail/Wholesale",
+                "Manufacturing": "Manufacturing",
+                "Government/Military": "Government/Military",
+                "Project domain.Other": "Project domain.Other"
+            },
+            "Project setting": {
+                "Co-located": "Co-located",
+                "Distributed: Close Onshore": "Distributed: Close Onshore",
+                "Distributed: Distant Onshore": "Distributed: Distant Onshore",
+                "Distributed: Near Offshore": "Distributed: Near Offshore",
+                "Distributed: Far Offshore": "Distributed: Far Offshore"
+            },
+            "Estimation entity": {
+                "User story": "User story",
+                "Task": "Task",
+                "Use case": "Use case",
+                "Estimation entity.Other": "Estimation entity.Other"
+            },
+            "Number of entities estimated": {
+                "Number of entities estimated.Value": "Number of entities estimated.Value"
+            },
+            "Team size": {
+                "No. of team members": "No. of team members"
+            }
+        },
+        'Estimation technique': {
+            "Estimation Techniques": {
+                "Planning Poker": "Planning Poker",
+                "Expert Judgement": "Expert Judgement",
+                "Analogy": "Analogy",
+                "Use case points method": "Use case points method",
+                "Estimation Techniques.Other": "Estimation Techniques.Other"
+            },
+            "Type": {
+                "Single": "Single",
+                "Group": "Group"
+            }
+        },
+        'Effort predictors': {
+            "Size": {
+                "Story points": "Story points",
+                "User case points": "User case points",
+                "Function points": "Function points",
+                "Size.Other": "Size.Other",
+                "Not used": "Not used",
+                "Considered without any metric": "Considered without any metric"
+            },
+            "Team's prior experience": {
+                "Considered": "Considered",
+                "Not Considered": "Not Considered"
+            },
+            "Team's skill level": {
+                "Considered": "Considered",
+                "Not Considered": "Not Considered"
+            },
+            "Non functional requirements": {
+                "Performance": "Performance",
+                "Security": "Security",
+                "Availability": "Availability",
+                "Reliability": "Reliability",
+                "Maintainability": "Maintainability",
+                "Non functional requirements.Other": "Non functional requirements.Other",
+                "Not considered": "Not considered"
+            },
+            "Distributed teams' issues": {
+                "Considered": "Considered",
+                "Not Considered": "Not Considered",
+                "Not applicable": "Not applicable"
+            },
+            "Customer Communication": {
+                "Considered": "Considered",
+                "Not Considered": "Not Considered"
+            }
+        },
+        'Effort estimate': {
+            "Estimated effort": {
+                "Estimate value(s)": "Estimate value(s)"
+            },
+            "Actual effort": {
+                "Actual effort.Value": "Actual effort.Value"
+            },
+            "Effort estimate.Type": {
+                "Point": "Point",
+                "Three point": "Three point",
+                "Distribution": "Distribution",
+                "Effort estimate.Type.Other": "Effort estimate.Type.Other"
+            },
+            "Unit": {
+                "Hours/days": "Hours/days",
+                "Pair days": "Pair/days",
+                "Ideal hours": "Ideal hours",
+                "Unit.Other": "Unit.Other"
+            },
+            "Accuracy Level": {
+                "Accuracy Level.Value": "Accuracy Level.Value"
+            },
+            "Accuracy measure": {
+                "Mean Magnitude of Relative Error": "Mean Magnitude of Relative Error",
+                "Median Magnitude of Relative Error": "Median Magnitude of Relative Error",
+                "Bias of Relative Error": "Bias of Relative Error",
+                "Accuracy measure.Other": "Accuracy measure.Other",
+                "Not used": "Not used"
+            }
+        }
+    }
+}
+
+# Main execution
+if __name__ == "__main__":
+    print("TAXONOMY NODE COUNTER")
+    print("=" * 80)
+    
+    # Analyze single taxonomy
+    print("\n1. SINGLE TAXONOMY ANALYSIS:")
+    results = count_taxonomy_nodes(new_taxonomy, "Cost Estimation for GSD")
+    display_results(results)
+```
+
+```{r}
+library(workflowr)
 ```
 
